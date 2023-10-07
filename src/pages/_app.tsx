@@ -1,20 +1,17 @@
 import { type AppType } from "next/app";
-import { Roboto } from 'next/font/google'
 
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 
-const roboto = Roboto({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto',
-  weight: "100",
-})
- 
+import { ClerkProvider } from "@clerk/nextjs";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
+  return (
+    <ClerkProvider {...pageProps}>
+      <Component {...pageProps} />
+    </ClerkProvider>
+  );
 };
 
 export default api.withTRPC(MyApp);
