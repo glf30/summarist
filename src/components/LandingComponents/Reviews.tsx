@@ -1,5 +1,6 @@
+import { SignInButton } from "@clerk/nextjs";
 import React from "react";
-import { BsStarFill } from "react-icons/bs"
+import { BsStarFill } from "react-icons/bs";
 
 const Reviews = () => {
   return (
@@ -64,7 +65,9 @@ const Reviews = () => {
             </div>
           </div>
           <div className="reviews__btn--wrapper">
-            <button className="btn home__cta--btn">Login</button>
+            <SignInButton mode="modal">
+              <button className="btn home__cta--btn">Login</button>
+            </SignInButton>
           </div>
         </div>
       </div>
