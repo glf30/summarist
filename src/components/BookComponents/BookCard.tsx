@@ -1,7 +1,6 @@
 import React from 'react'
 import Image from "next/image";
 import Link from "next/link";
-import testImg from "public/assets/test-img.png";
 import clockIcon from "public/assets/clock-icon.svg";
 import starIcon from "public/assets/star-icon.svg";
 import { Book } from '~/types/Book';
@@ -9,7 +8,7 @@ import { Book } from '~/types/Book';
 const BookCard = (props: Book) => {
     return (
       <Link
-        href={"/for-you"}
+        href={`/book/${props.id}`}
         className="relative w-full max-w-[200px] rounded px-3 pb-3 pt-8 duration-200 hover:bg-[#f1f6f4]"
       >
         {props.subscriptionRequired && <div className="absolute right-0 top-0 flex h-[18px] w-fit items-center rounded-[20px] bg-primary px-2 py-0 text-[10px] text-white">

@@ -67,7 +67,7 @@ const ForYouArea = () => {
       </div>
       <Link
         className="mb-6 flex w-[calc((100%/3)*2)] flex-col justify-between gap-6 rounded-[4px] bg-[#fbefd5] p-6 md:flex-row"
-        href={`/book`}
+        href={`/book/${selectedBook?.id}`}
       >
         <div className="w-full text-primary md:w-[40%] ">
           {selectedBook?.subTitle}

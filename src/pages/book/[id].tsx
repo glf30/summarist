@@ -32,12 +32,12 @@ export default function BookInfoPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <Layout>
-      <div className="flex flex-col-reverse gap-8 md:flex-row md:gap-4">
+      <div className="flex flex-col-reverse items-center md:items-start gap-8 md:flex-row md:gap-4">
         <div className="w-full">
           {/* Title Section */}
           <div className="text-primary mb-4 text-3xl font-semibold">
             {bookInfo.title}{" "}
-            {`${bookInfo.subscriptionRequired && `(Premium)`} `}
+            {bookInfo.subscriptionRequired && `(Premium)`}
           </div>
           <div className="text-primary mb-4 font-semibold">
             {bookInfo.author}
@@ -48,15 +48,15 @@ export default function BookInfoPage({
           {/* Icon Section */}
           <div className="mb-6 border-b border-t border-[#e1e7ea] py-4">
             <div className="flex max-w-[400px] flex-wrap gap-y-3">
-              {/* Star Icon */}
+              {/* Ratings */}
               <div className="text-primary flex w-1/2 items-center text-sm font-semibold">
                 <div className="mr-1 flex h-6 w-6">
                   <Image src={starIcon} alt="" width={24} height={24}/>
                 </div>
                 <div>{bookInfo.averageRating} </div>
-                <div>{`${bookInfo.totalRating} ratings`}</div>
+                <div className="whitespace-pre">{" "}{`(${bookInfo.totalRating} ratings)`}</div>
               </div>
-              {/* Clock */}
+              {/* Duration */}
               <div className="text-primary flex w-1/2 items-center text-sm font-semibold">
                 <div className="mr-1 flex h-6 w-6">
                   <Image src={clockIcon} alt="" width={24} height={24}/>
