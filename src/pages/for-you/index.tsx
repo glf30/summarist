@@ -62,14 +62,14 @@ const ForYouArea = () => {
   return (
     <div>
       {/* For You Section */}
-      <div className="mb-4 text-xl font-bold text-[#032b41]">
+      <div className="mb-4 text-xl font-bold text-primary">
         Selected just for you
       </div>
       <Link
         className="mb-6 flex w-[calc((100%/3)*2)] flex-col justify-between gap-6 rounded-[4px] bg-[#fbefd5] p-6 md:flex-row"
         href={`/book`}
       >
-        <div className="w-full text-[#032b41] md:w-[40%] ">
+        <div className="w-full text-primary md:w-[40%] ">
           {selectedBook?.subTitle}
         </div>
         <div className="w-[1px] bg-[#bac8ce]"></div>
@@ -78,7 +78,7 @@ const ForYouArea = () => {
             <Image src={selectedBook?.imageLink ?? ""} width={140} height={140} alt="" />
           </figure>
           <div className="w-full">
-            <div className="mb-2 font-semibold text-[#032b41]">
+            <div className="mb-2 font-semibold text-primary">
               {selectedBook?.title}
             </div>
             <div className="mb-4 text-sm text-[#394547]">{selectedBook?.author}</div>
@@ -86,7 +86,7 @@ const ForYouArea = () => {
               <div className="min-w-10 flex h-10 w-10 items-center">
                 <Image src={playButton} alt="" width={40} height={40}/>
               </div>
-              <div className="text-sm font-medium text-[#032b41]">
+              <div className="text-sm font-medium text-primary">
                 3 mins 23 secs
               </div>
             </div>
@@ -95,7 +95,7 @@ const ForYouArea = () => {
       </Link>
       {/* Recommended Section */}
       <div>
-        <div className="mb-4 text-xl font-bold text-[#032b41]">
+        <div className="mb-4 text-xl font-bold text-primary">
           Recommended For You
         </div>
         <div className="mb-4 font-light text-[#394547]">
@@ -111,7 +111,7 @@ const ForYouArea = () => {
       </div>
       {/* Suggested Section */}
       <div>
-        <div className="mb-4 text-xl font-bold text-[#032b41]">
+        <div className="mb-4 text-xl font-bold text-primary">
           Suggested Books
         </div>
         <div className="mb-4 font-light text-[#394547]">Browse these books</div>

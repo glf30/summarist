@@ -44,7 +44,7 @@ const SideBar = () => {
         <div className="mt-10 flex-1">
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -54,7 +54,7 @@ const SideBar = () => {
           </Link>
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -69,7 +69,7 @@ const SideBar = () => {
           </Link>
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -79,7 +79,7 @@ const SideBar = () => {
           </Link>
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -91,7 +91,7 @@ const SideBar = () => {
         <div className="">
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -106,7 +106,7 @@ const SideBar = () => {
           </Link>
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -122,7 +122,7 @@ const SideBar = () => {
           <SignOutButton>
             <Link
               href={"/for-you"}
-              className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
+              className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
             >
               <div className="mr-4 h-full w-1 bg-transparent"></div>
               <div className="mr-2 flex items-center justify-center">
