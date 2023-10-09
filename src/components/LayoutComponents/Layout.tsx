@@ -148,7 +148,7 @@ const SearchArea = () => {
       <div className="relative mx-auto my-0 flex h-full max-w-[1070px] items-center justify-between px-8 py-0">
         {/* space holder */}
         <figure>
-          <Image src={""} height={0} width={0} alt="logo" />
+          <img src={""} height={0} width={0} alt="logo" />
         </figure>
         <div className="flex w-full max-w-[340px] items-center gap-6">
           <div className="flex w-full items-center">
