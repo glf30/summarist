@@ -217,12 +217,27 @@ const ForYouArea = () => {
           We think you'll like these
         </div>
         {/* Books Container */}
-        <div className="mb-32 flex gap-4 overflow-x-clip">
-          {
-            Array(5).fill(0).map(() => (
+        <div className="mb-8 flex gap-4 overflow-x-clip">
+          {Array(5)
+            .fill(0)
+            .map(() => (
               <BookCard />
-            ))
-          }
+            ))}
+        </div>
+      </div>
+      {/* Suggested Section */}
+      <div>
+        <div className="mb-4 text-xl font-bold text-[#032b41]">
+          Suggested Books
+        </div>
+        <div className="mb-4 font-light text-[#394547]">Browse these books</div>
+        {/* Books Container */}
+        <div className="mb-8 flex gap-4 overflow-x-clip">
+          {Array(5)
+            .fill(0)
+            .map(() => (
+              <BookCard />
+            ))}
         </div>
       </div>
     </div>
