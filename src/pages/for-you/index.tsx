@@ -15,163 +15,19 @@ import testImg from "public/assets/test-img.png";
 import playButton from "public/assets/play-button.svg";
 import clockIcon from "public/assets/clock-icon.svg";
 import starIcon from "public/assets/star-icon.svg";
+import BookCard from "~/components/BookComponents/BookCard";
+import Layout from "~/components/LayoutComponents/Layout";
 
 const ForYou = () => {
   return (
-    <>
-      <SideBar />
-      <div className="relative flex w-full flex-col md:ml-[200px] md:w-[calc(100%-200px)]">
-        <SearchArea />
-        <div className="mx-auto my-0 w-full max-w-[1070px] px-6 py-0">
-          <div className="w-full px-0 py-10">
-            <ForYouArea />
-          </div>
-        </div>
-      </div>
-    </>
+    <Layout>
+      <ForYouArea />
+    </Layout>
   );
 };
 
 export default ForYou;
 
-const SideBar = () => {
-  return (
-    <div className="fixed z-50 hidden h-screen w-[200px] min-w-[200px] bg-[#f7faf9] md:block">
-      <div className="max-width-[160px] mx-auto my-0 flex h-14 items-center justify-center pt-4">
-        <Image src={logo} alt="logo" className="h-10 w-40" />
-      </div>
-      <div className="flex h-[calc(100vh-60px)] flex-col justify-between overflow-y-auto pb-5">
-        <div className="mt-10 flex-1">
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
-          >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
-            <div className="mr-2 flex items-center justify-center">
-              <Image src={homeIcon} alt="home icon" height={24} width={24} />
-            </div>
-            <div>For you</div>
-          </Link>
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
-          >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
-            <div className="mr-2 flex items-center justify-center">
-              <Image
-                src={bookmarkIcon}
-                alt="home icon"
-                height={24}
-                width={24}
-              />
-            </div>
-            <div>My Library</div>
-          </Link>
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
-          >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
-            <div className="mr-2 flex items-center justify-center">
-              <Image src={penIcon} alt="home icon" height={24} width={24} />
-            </div>
-            <div>Highlights</div>
-          </Link>
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
-          >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
-            <div className="mr-2 flex items-center justify-center">
-              <Image src={searchIcon} alt="home icon" height={24} width={24} />
-            </div>
-            <div>Search</div>
-          </Link>
-        </div>
-        <div className="">
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
-          >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
-            <div className="mr-2 flex items-center justify-center">
-              <Image
-                src={settingsIcon}
-                alt="home icon"
-                height={24}
-                width={24}
-              />
-            </div>
-            <div>Settings</div>
-          </Link>
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
-          >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
-            <div className="mr-2 flex items-center justify-center">
-              <Image
-                src={questionIcon}
-                alt="home icon"
-                height={24}
-                width={24}
-              />
-            </div>
-            <div>Help & Support</div>
-          </Link>
-          <SignOutButton>
-            <Link
-              href={"/for-you"}
-              className="mb-2 flex h-14 items-center text-[#032b41] duration-200 hover:bg-[#f0efef]"
-            >
-              <div className="mr-4 h-full w-1 bg-transparent"></div>
-              <div className="mr-2 flex items-center justify-center">
-                <Image
-                  src={logoutIcon}
-                  alt="home icon"
-                  height={24}
-                  width={24}
-                />
-              </div>
-              <div>Logout</div>
-            </Link>
-          </SignOutButton>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const SearchArea = () => {
-  return (
-    <div className="z-[1] h-20 w-full border-b border-b-[#e1e7ea] bg-white">
-      <div className="relative mx-auto my-0 flex h-full max-w-[1070px] items-center justify-between px-8 py-0">
-        {/* space holder */}
-        <figure>
-          <Image src={""} height={0} width={0} alt="logo" />
-        </figure>
-        <div className="flex w-full max-w-[340px] items-center gap-6">
-          <div className="flex w-full items-center">
-            <div className="relative flex w-full items-center gap-2">
-              <input
-                type="text"
-                className="h-10 w-full rounded-lg border-2 border-[#e1e7ea] bg-[#f1f6f4] px-4 py-0 text-[#042330] outline-none"
-                placeholder="Search for books"
-                autoComplete="off"
-              />
-              <div className="absolute right-2 flex h-full items-center justify-end border-l-2 border-l-[#e1e7ea] pl-2">
-                <Image src={searchIcon} alt="search icon" />
-              </div>
-            </div>
-          </div>
-          <div className="flex cursor-pointer items-center justify-center md:hidden">
-            <Image src={hamburgerIcon} alt="home icon" height={24} width={24} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const ForYouArea = () => {
   return (
@@ -241,42 +97,5 @@ const ForYouArea = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const BookCard = () => {
-  return (
-    <Link
-      href={"/for-you"}
-      className="relative w-full max-w-[200px] rounded px-3 pb-3 pt-8 duration-200 hover:bg-[#f1f6f4]"
-    >
-      <div className="absolute right-0 top-0 flex h-[18px] w-fit items-center rounded-[20px] bg-[#032b41] px-2 py-0 text-[10px] text-white">
-        Premium
-      </div>
-      <figure className="h-[172px] w-[172px]">
-        <Image src={testImg} alt="" />
-      </figure>
-      <div className="mb-2 text-base font-bold text-[#032b41]">Mastery</div>
-      <div className="mb-2 text-sm font-light text-[#6b757b]">
-        Dale Dalington
-      </div>
-      <div className="mb-2 text-sm text-[#394547]">
-        Time tested advice for the digital age
-      </div>
-      <div className="flex gap-2">
-        <div className="flex items-center gap-1 text-sm font-light text-[#6b757b]">
-          <div className="flex h-4 w-4">
-            <Image src={clockIcon} alt="" />
-          </div>
-          <div className="text-sm font-light text-[#6b757b]">0:34</div>
-        </div>
-        <div className="flex items-center gap-1 text-sm font-light text-[#6b757b]">
-          <div className="flex h-4 w-4">
-            <Image src={starIcon} alt="" />
-          </div>
-          <div className="text-sm font-light text-[#6b757b]">4.4</div>
-        </div>
-      </div>
-    </Link>
   );
 };
