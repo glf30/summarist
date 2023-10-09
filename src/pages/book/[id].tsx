@@ -8,7 +8,7 @@ import clockIcon from "public/assets/clock-icon.svg";
 import micIcon from "public/assets/mic-icon.svg";
 import lightbulbIcon from "public/assets/lightbulb-icon.svg";
 import bookIcon from "public/assets/book-icon.svg";
-import bookmarkIcon from "public/assets/bookmark-icon.svg";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 export const getStaticPaths = (async () => {
   return {
@@ -30,14 +30,15 @@ export const getStaticProps: GetStaticProps = (async (context) => {
 export default function BookInfoPage({
   bookInfo,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { user } = useUser();
+
   return (
     <Layout>
-      <div className="flex flex-col-reverse items-center md:items-start gap-8 md:flex-row md:gap-4">
+      <div className="flex flex-col-reverse items-center gap-8 md:flex-row md:items-start md:gap-4">
         <div className="w-full">
           {/* Title Section */}
           <div className="text-primary mb-4 text-3xl font-semibold">
-            {bookInfo.title}{" "}
-            {bookInfo.subscriptionRequired && `(Premium)`}
+            {bookInfo.title} {bookInfo.subscriptionRequired && `(Premium)`}
           </div>
           <div className="text-primary mb-4 font-semibold">
             {bookInfo.author}
@@ -51,22 +52,25 @@ export default function BookInfoPage({
               {/* Ratings */}
               <div className="text-primary flex w-1/2 items-center text-sm font-semibold">
                 <div className="mr-1 flex h-6 w-6">
-                  <Image src={starIcon} alt="" width={24} height={24}/>
+                  <Image src={starIcon} alt="" width={24} height={24} />
                 </div>
                 <div>{bookInfo.averageRating} </div>
-                <div className="whitespace-pre">{" "}{`(${bookInfo.totalRating} ratings)`}</div>
+                <div className="whitespace-pre">
+                  {" "}
+                  {`(${bookInfo.totalRating} ratings)`}
+                </div>
               </div>
               {/* Duration */}
               <div className="text-primary flex w-1/2 items-center text-sm font-semibold">
                 <div className="mr-1 flex h-6 w-6">
-                  <Image src={clockIcon} alt="" width={24} height={24}/>
+                  <Image src={clockIcon} alt="" width={24} height={24} />
                 </div>
                 <div>04:52</div>
               </div>
               {/* Audio */}
               <div className="text-primary flex w-1/2 items-center text-sm font-semibold">
                 <div className="mr-1 flex h-6 w-6">
-                  <Image src={micIcon} alt="" width={24} height={24}/>
+                  <Image src={micIcon} alt="" width={24} height={24} />
                 </div>
                 <div>{bookInfo.type}</div>
               </div>
@@ -81,26 +85,106 @@ export default function BookInfoPage({
           </div>
           {/* Buttons */}
           <div className="mb-8 flex gap-4">
-            <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] text-white duration-200 hover:opacity-80 font-semibold">
-              <div className="flex">
-                <Image src={bookIcon} alt="" width={24} height={24} className="invert"/>
-              </div>
-              <div>Read</div>
-            </button>
-            <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] text-white duration-200 hover:opacity-80 font-semibold">
-              <div className="flex">
-                <Image src={micIcon} alt="" width={24} height={24} className="invert"/>
-              </div>
-              <div>Listen</div>
-            </button>
+            {!!user ? (
+              <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
+                <div className="flex">
+                  <Image
+                    src={bookIcon}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="invert"
+                  />
+                </div>
+                <div>Read</div>
+              </button>
+            ) : (
+              <SignInButton mode="modal" redirectUrl="">
+                <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
+                  <div className="flex">
+                    <Image
+                      src={bookIcon}
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="invert"
+                    />
+                  </div>
+                  <div>Read</div>
+                </button>
+              </SignInButton>
+            )}
+
+            {!!user ? (
+              <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
+                <div className="flex">
+                  <Image
+                    src={micIcon}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="invert"
+                  />
+                </div>
+                <div>Listen</div>
+              </button>
+            ) : (
+              <SignInButton mode="modal" redirectUrl="">
+                <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
+                  <div className="flex">
+                    <Image
+                      src={micIcon}
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="invert"
+                    />
+                  </div>
+                  <div>Listen</div>
+                </button>
+              </SignInButton>
+            )}
           </div>
           {/* Bookmark */}
-          <div className="mb-10 flex cursor-pointer items-center gap-2 text-lg font-semibold text-[#0365f2] group ">
-            <div className="flex h-5 w-5">
-              <svg stroke-width="0" viewBox="0 0 16 16" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" className="fill-[#0365f2] group-hover:fill-primary duration-200"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"></path></svg>
+
+          {!!user ? (
+            <div className="group mb-10 flex cursor-pointer items-center gap-2 text-lg font-semibold text-[#0365f2] ">
+              <div className="flex h-5 w-5">
+                <svg
+                  viewBox="0 0 16 16"
+                  height="24px"
+                  width="24px"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="group-hover:fill-primary fill-[#0365f2] duration-200"
+                >
+                  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"></path>
+                </svg>
+              </div>
+              <div className="duration-200 group-hover:text-[#044298]">
+                Add title to My Library
+              </div>
             </div>
-            <div className="group-hover:text-[#044298] duration-200">Add title to My Library</div>
-          </div>
+          ) : (
+            <SignInButton mode="modal" redirectUrl="">
+              <div className="group mb-10 flex cursor-pointer items-center gap-2 text-lg font-semibold text-[#0365f2] ">
+                <div className="flex h-5 w-5">
+                  <svg
+                    viewBox="0 0 16 16"
+                    height="24px"
+                    width="24px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="group-hover:fill-primary fill-[#0365f2] duration-200"
+                  >
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"></path>
+                  </svg>
+                </div>
+                <div className="duration-200 group-hover:text-[#044298]">
+                  Add title to My Library
+                </div>
+              </div>
+            </SignInButton>
+          )}
+
           <div className="text-primary mb-4 text-lg font-semibold">
             What's it about?
           </div>
@@ -141,7 +225,7 @@ type Tag = {
 
 const TagCard: React.FC<Tag> = ({ tag }) => {
   return (
-    <div className="text-primary flex items-center h-12 rounded bg-[#f1f6f4] px-4 py-0 font-semibold ">
+    <div className="text-primary flex h-12 items-center rounded bg-[#f1f6f4] px-4 py-0 font-semibold ">
       {tag}
     </div>
   );

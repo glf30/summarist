@@ -65,7 +65,7 @@ const Reviews = () => {
             </div>
           </div>
           <div className="reviews__btn--wrapper">
-            <SignInButton mode="modal">
+            <SignInButton mode="modal" redirectUrl="/for-you">
               <button className="btn home__cta--btn">Login</button>
             </SignInButton>
           </div>

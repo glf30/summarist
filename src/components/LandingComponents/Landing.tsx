@@ -21,7 +21,7 @@ const Landing = () => {
                 <br className="remove--tablet" />
                 and even people who don't like to read.
               </div>
-              <SignInButton mode="modal">
+              <SignInButton mode="modal" redirectUrl="/for-you">
                 <button className="btn home__cta--btn">Login</button>
               </SignInButton>
             </div>

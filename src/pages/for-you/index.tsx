@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import testImg from "public/assets/test-img.png";
 import playButton from "public/assets/play-button.svg";
 import BookCard from "~/components/BookComponents/BookCard";
 import Layout from "~/components/LayoutComponents/Layout";

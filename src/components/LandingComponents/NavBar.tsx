@@ -11,7 +11,7 @@ const NavBar = () => {
           <Image className="nav__img" src={logo} alt="logo" />
         </figure>
         <ul className="nav__list--wrapper">
-          <SignInButton mode="modal">
+          <SignInButton mode="modal" redirectUrl="/for-you">
             <li className="nav__list nav__list--login">Login</li>
           </SignInButton>
           <li className="nav__list nav__list--mobile">About</li>

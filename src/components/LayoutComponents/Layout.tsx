@@ -1,4 +1,4 @@
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, SignInButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import React from "react";
 import logo from "public/assets/logo.png";
@@ -11,12 +11,14 @@ import settingsIcon from "public/assets/settings-wheel.svg";
 import questionIcon from "public/assets/question-icon.svg";
 import logoutIcon from "public/assets/logout-icon.svg";
 import hamburgerIcon from "public/assets/hamburger-menu.svg";
+import { useRouter } from "next/router";
 
 interface LayoutProps {
     children: JSX.Element;
 }
 
 const Layout = ({children} : LayoutProps) => {
+
   return (
     <>
       <SideBar />
@@ -35,6 +37,9 @@ const Layout = ({children} : LayoutProps) => {
 export default Layout;
 
 const SideBar = () => {
+  const { user } = useUser();
+  const { asPath } = useRouter();
+
   return (
     <div className="fixed z-50 hidden h-screen w-[200px] min-w-[200px] bg-[#f7faf9] md:block">
       <div className="max-width-[160px] mx-auto my-0 flex h-14 items-center justify-center pt-4">
@@ -119,10 +124,10 @@ const SideBar = () => {
             </div>
             <div>Help & Support</div>
           </Link>
+          {!!user ? (
           <SignOutButton>
-            <Link
-              href={"/for-you"}
-              className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+            <button
+              className="w-full mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
             >
               <div className="mr-4 h-full w-1 bg-transparent"></div>
               <div className="mr-2 flex items-center justify-center">
@@ -134,8 +139,27 @@ const SideBar = () => {
                 />
               </div>
               <div>Logout</div>
-            </Link>
-          </SignOutButton>
+            </button>
+          </SignOutButton> ) :
+          (
+            <SignInButton mode="modal" redirectUrl={asPath}>
+            <button
+              className="w-full mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+            >
+              <div className="mr-4 h-full w-1 bg-transparent"></div>
+              <div className="mr-2 flex items-center justify-center">
+                <Image
+                  src={logoutIcon}
+                  alt="home icon"
+                  height={24}
+                  width={24}
+                />
+              </div>
+              <div>Login</div>
+            </button>
+          </SignInButton>
+          )
+          }
         </div>
       </div>
     </div>
