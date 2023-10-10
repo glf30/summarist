@@ -14,20 +14,22 @@ import hamburgerIcon from "public/assets/hamburger-menu.svg";
 import { useRouter } from "next/router";
 
 interface LayoutProps {
-    children: JSX.Element;
+  children: JSX.Element;
+  isPlayer?: boolean;
 }
 
-const Layout = ({children} : LayoutProps) => {
+interface SidebarProps {
+  isPlayer?: boolean;
+}
 
+const Layout = ({ children, isPlayer }: LayoutProps) => {
   return (
     <>
-      <SideBar />
-      <div className="relative flex w-full flex-col md:ml-[200px] md:w-[calc(100%-200px)]">
+      <div className="relative flex w-full flex-col md:ml-[200px] md:w-[calc(100%-200px)] overflow-y-auto">
+        <SideBar isPlayer={isPlayer}/>
         <SearchArea />
         <div className="mx-auto my-0 w-full max-w-[1070px] px-6 py-0">
-          <div className="w-full px-0 py-10">
-            {children}
-          </div>
+          <div className="w-full px-0 py-10">{children}</div>
         </div>
       </div>
     </>
@@ -36,20 +38,24 @@ const Layout = ({children} : LayoutProps) => {
 
 export default Layout;
 
-const SideBar = () => {
+const SideBar = ({ isPlayer }: SidebarProps) => {
   const { user } = useUser();
   const { asPath } = useRouter();
 
   return (
-    <div className="fixed z-50 hidden h-screen w-[200px] min-w-[200px] bg-[#f7faf9] md:block">
+    <div className="fixed left-0 top-0 z-50 hidden h-screen w-[200px] min-w-[200px] bg-[#f7faf9] md:block">
       <div className="max-width-[160px] mx-auto my-0 flex h-14 items-center justify-center pt-4">
         <Image src={logo} alt="logo" className="h-10 w-40" />
       </div>
-      <div className="flex h-[calc(100vh-60px)] flex-col justify-between overflow-y-auto pb-5">
+      <div
+        className={`flex flex-col justify-between pb-5 ${
+          isPlayer ? `h-[calc(100vh-140px)]` : `h-[calc(100vh-60px)]`
+        }  `}
+      >
         <div className="mt-10 flex-1">
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -59,7 +65,7 @@ const SideBar = () => {
           </Link>
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -74,7 +80,7 @@ const SideBar = () => {
           </Link>
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -84,7 +90,7 @@ const SideBar = () => {
           </Link>
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -96,7 +102,7 @@ const SideBar = () => {
         <div className="">
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -111,7 +117,7 @@ const SideBar = () => {
           </Link>
           <Link
             href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -125,41 +131,36 @@ const SideBar = () => {
             <div>Help & Support</div>
           </Link>
           {!!user ? (
-          <SignOutButton>
-            <button
-              className="w-full mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
-            >
-              <div className="mr-4 h-full w-1 bg-transparent"></div>
-              <div className="mr-2 flex items-center justify-center">
-                <Image
-                  src={logoutIcon}
-                  alt="home icon"
-                  height={24}
-                  width={24}
-                />
-              </div>
-              <div>Logout</div>
-            </button>
-          </SignOutButton> ) :
-          (
+            <SignOutButton>
+              <button className="text-primary mb-2 flex h-14 w-full items-center duration-200 hover:bg-[#f0efef]">
+                <div className="mr-4 h-full w-1 bg-transparent"></div>
+                <div className="mr-2 flex items-center justify-center">
+                  <Image
+                    src={logoutIcon}
+                    alt="home icon"
+                    height={24}
+                    width={24}
+                  />
+                </div>
+                <div>Logout</div>
+              </button>
+            </SignOutButton>
+          ) : (
             <SignInButton mode="modal" redirectUrl={asPath}>
-            <button
-              className="w-full mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
-            >
-              <div className="mr-4 h-full w-1 bg-transparent"></div>
-              <div className="mr-2 flex items-center justify-center">
-                <Image
-                  src={logoutIcon}
-                  alt="home icon"
-                  height={24}
-                  width={24}
-                />
-              </div>
-              <div>Login</div>
-            </button>
-          </SignInButton>
-          )
-          }
+              <button className="text-primary mb-2 flex h-14 w-full items-center duration-200 hover:bg-[#f0efef]">
+                <div className="mr-4 h-full w-1 bg-transparent"></div>
+                <div className="mr-2 flex items-center justify-center">
+                  <Image
+                    src={logoutIcon}
+                    alt="home icon"
+                    height={24}
+                    width={24}
+                  />
+                </div>
+                <div>Login</div>
+              </button>
+            </SignInButton>
+          )}
         </div>
       </div>
     </div>

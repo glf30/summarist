@@ -99,7 +99,7 @@ export default function BookInfoPage({
                 <div>Read</div>
               </button>
             ) : (
-              <SignInButton mode="modal" redirectUrl="">
+              <SignInButton mode="modal" redirectUrl={`/player/${bookInfo.id}`}>
                 <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
                   <div className="flex">
                     <Image
@@ -129,7 +129,7 @@ export default function BookInfoPage({
                 <div>Listen</div>
               </button>
             ) : (
-              <SignInButton mode="modal" redirectUrl="">
+              <SignInButton mode="modal" redirectUrl={`/player/${bookInfo.id}`}>
                 <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
                   <div className="flex">
                     <Image

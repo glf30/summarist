@@ -553,4 +553,14 @@ button {
       display: none;
     }
   }
+
+  .audio__bar {
+    background: linear-gradient(to right, rgb(43, 217, 124) 0%, rgb(109, 120, 125) 0%);
+    --range-progress: 0%;
+  }
+
+  .audio__bar input[type=range]::-webkit-slider-thumb {
+    background: #fff;
+    background-color: #fff;
+  }
 }
