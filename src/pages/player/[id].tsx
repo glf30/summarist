@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
 import { useUser } from "@clerk/nextjs";
@@ -7,6 +7,7 @@ import Image from "next/image";
 import backButton from "public/assets/back-button.svg";
 import forwardButton from "public/assets/forward-button.svg";
 import playButton from "public/assets/play-button.svg";
+import pauseButton from "public/assets/pause-button.svg";
 
 export const getStaticPaths = (async () => {
   return {
@@ -28,7 +29,23 @@ export const getStaticProps: GetStaticProps = (async (context) => {
 export default function BookInfoPage({
   bookInfo,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null); 
+
   const { user } = useUser();
+
+  const handlePlay = () => {
+    setIsPlaying(!isPlaying);
+  }
+
+  useEffect(() => {
+    if (isPlaying) {
+      audioRef.current?.play();
+    } else {
+      audioRef.current?.pause();
+    }
+  }, [isPlaying, audioRef]);
+
   if (!user) return null;
   return (
     <>
@@ -47,6 +64,7 @@ export default function BookInfoPage({
         </div>
       </Layout>
       {/* Audio Player */}
+      <audio src={bookInfo.audioLink} ref={audioRef}/>
       <div className="fixed bottom-0 left-0 z-[9000] mt-auto flex w-full flex-col items-center justify-between bg-[#042330] px-10 py-0 md:h-20 md:flex-row">
         {/* book info */}
         <div className="flex w-full justify-center gap-3 py-3 md:w-[calc(100%/3)] md:justify-normal md:py-0">
@@ -74,14 +92,24 @@ export default function BookInfoPage({
                 className="invert"
               />
             </button>
-            <button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white">
-              <Image
-                src={playButton}
-                width={36}
-                height={36}
-                alt=""
-                className="fill-primary"
-              />
+            <button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white" onClick={handlePlay}>
+              {!!isPlaying ? (
+                <Image
+                  src={pauseButton}
+                  width={36}
+                  height={36}
+                  alt=""
+                  className="fill-primary"
+                />
+              ) : (
+                <Image
+                  src={playButton}
+                  width={36}
+                  height={36}
+                  alt=""
+                  className="fill-primary"
+                />
+              )}
             </button>
             <button className="cursor-pointer rounded-full">
               <Image
