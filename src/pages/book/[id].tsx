@@ -9,6 +9,7 @@ import micIcon from "public/assets/mic-icon.svg";
 import lightbulbIcon from "public/assets/lightbulb-icon.svg";
 import bookIcon from "public/assets/book-icon.svg";
 import { SignInButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 export const getStaticPaths = (async () => {
   return {
@@ -86,7 +87,7 @@ export default function BookInfoPage({
           {/* Buttons */}
           <div className="mb-8 flex gap-4">
             {!!user ? (
-              <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
+              <Link href={`/player/${bookInfo.id}`} className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
                 <div className="flex">
                   <Image
                     src={bookIcon}
@@ -97,7 +98,7 @@ export default function BookInfoPage({
                   />
                 </div>
                 <div>Read</div>
-              </button>
+              </Link>
             ) : (
               <SignInButton mode="modal" redirectUrl={`/player/${bookInfo.id}`}>
                 <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
@@ -116,7 +117,7 @@ export default function BookInfoPage({
             )}
 
             {!!user ? (
-              <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
+              <Link href={`/player/${bookInfo.id}`} className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
                 <div className="flex">
                   <Image
                     src={micIcon}
@@ -127,7 +128,7 @@ export default function BookInfoPage({
                   />
                 </div>
                 <div>Listen</div>
-              </button>
+              </Link>
             ) : (
               <SignInButton mode="modal" redirectUrl={`/player/${bookInfo.id}`}>
                 <button className="bg-primary flex h-12 w-36 cursor-pointer items-center justify-center gap-2 rounded text-[16px] font-semibold text-white duration-200 hover:opacity-80">
