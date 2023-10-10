@@ -12,6 +12,7 @@ type accordianTracker = {
 };
 
 const ChoosePlanPage = () => {
+  const [activePlan, setActivePlan] = useState("yearly");
   const [isOpen, setIsOpen] = useState<accordianTracker>({
     accordian1: false,
     accordian2: false,
@@ -21,7 +22,7 @@ const ChoosePlanPage = () => {
 
   function openCloseAccordian(select: string) {
     const isOpenTemp =
-    //if the one clicked is not already selected, close all
+      //if the one clicked is not already selected, close all
       isOpen[select] !== true
         ? {
             accordian1: false,
@@ -34,6 +35,10 @@ const ChoosePlanPage = () => {
     isOpenTemp[select] = !isOpenTemp[select];
     setIsOpen({ ...isOpenTemp });
   }
+
+  const handleCardSelect = (planType: string) => {
+    setActivePlan(planType);
+  };
 
   return (
     <div>
@@ -83,8 +88,19 @@ const ChoosePlanPage = () => {
               Choose the plan that fits you
             </div>
             {/* Plan Cards */}
-            <div className="mx-auto flex max-w-[680px] cursor-pointer gap-6 rounded border-4 border-[#bac8ce] bg-[#f1f6f4] p-6">
-              <div className="relative flex h-6 w-6 items-center justify-center rounded-full border-2 border-black"></div>
+            <div
+              onClick={() => handleCardSelect("yearly")}
+              className={`mx-auto flex max-w-[680px] cursor-pointer gap-6 rounded border-4 ${
+                activePlan === `yearly`
+                  ? `border-[#2bd97c]`
+                  : `border-[#bac8ce]`
+              } bg-[#f1f6f4] p-6`}
+            >
+              <div className="relative flex h-6 w-6 items-center justify-center rounded-full border-2 border-black">
+                {activePlan === `yearly` && (
+                  <div className="absolute h-[6px] w-[6px] rounded-full bg-black"></div>
+                )}
+              </div>
               <div>
                 <div className="text-primary mb-2 text-lg font-semibold">
                   Premium Plus Yearly
@@ -102,8 +118,19 @@ const ChoosePlanPage = () => {
               <div>or</div>
             </div>
             {/* Card */}
-            <div className="mx-auto flex max-w-[680px] cursor-pointer gap-6 rounded border-4 border-[#bac8ce] bg-[#f1f6f4] p-6">
-              <div className="relative flex h-6 w-6 items-center justify-center rounded-full border-2 border-black"></div>
+            <div
+              onClick={() => handleCardSelect("monthly")}
+              className={`mx-auto flex max-w-[680px] cursor-pointer gap-6 rounded border-4 ${
+                activePlan === `yearly`
+                  ? `border-[#bac8ce]`
+                  : `border-[#2bd97c]`
+              } bg-[#f1f6f4] p-6`}
+            >
+              <div className="relative flex h-6 w-6 items-center justify-center rounded-full border-2 border-black">
+                {activePlan !== `yearly` && (
+                  <div className="absolute h-[6px] w-[6px] rounded-full bg-black"></div>
+                )}
+              </div>
               <div>
                 <div className="text-primary mb-2 text-lg font-semibold">
                   Premium Monthly
@@ -116,11 +143,22 @@ const ChoosePlanPage = () => {
             </div>
             <div className="sticky bottom-0 z-[1] flex flex-col items-center gap-4 bg-white py-8 ">
               <button className="text-primary flex h-10 w-full min-w-[180px] max-w-[300px] items-center justify-center rounded bg-[#2bd97c] text-base duration-200 hover:bg-[#20ba68]">
-                <span>Start your first month</span>
+                {activePlan === "yearly" ? (
+                  <span>Start your free 7-day trial</span>
+                ) : (
+                  <span>Start your first month</span>
+                )}
               </button>
 
               <div className="text-center text-xs text-[#6b757b]">
-                30-day money back guaruntee, no questions asked
+                {activePlan === "yearly" ? (
+                  <>
+                    Cancel your trial at any time before it ends, and you won't
+                    be charged.
+                  </>
+                ) : (
+                  <>30-day money back guarantee, no questions asked.</>
+                )}
               </div>
             </div>
             {/* Accordians */}
