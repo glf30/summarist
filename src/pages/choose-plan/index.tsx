@@ -7,11 +7,32 @@ import plantImg from "public/assets/plant-icon.svg";
 import handsImg from "public/assets/hands-icon.svg";
 import downIcon from "public/assets/down-icon.svg";
 
-const ChoosePlanPage = () => {
-  const [isOpen, setIsOpen] = useState(false);
+type accordianTracker = {
+  [key: string]: boolean;
+};
 
-  function openCloseAccordian() {
-    // setIsOpen(!isOpen);
+const ChoosePlanPage = () => {
+  const [isOpen, setIsOpen] = useState<accordianTracker>({
+    accordian1: false,
+    accordian2: false,
+    accordian3: false,
+    accordian4: false,
+  });
+
+  function openCloseAccordian(select: string) {
+    const isOpenTemp =
+    //if the one clicked is not already selected, close all
+      isOpen[select] !== true
+        ? {
+            accordian1: false,
+            accordian2: false,
+            accordian3: false,
+            accordian4: false,
+          }
+        : isOpen;
+
+    isOpenTemp[select] = !isOpenTemp[select];
+    setIsOpen({ ...isOpenTemp });
   }
 
   return (
@@ -105,15 +126,17 @@ const ChoosePlanPage = () => {
             {/* Accordians */}
             <div
               className="mb-8 overflow-hidden border-b border-[#ddd]"
-              onClick={openCloseAccordian}
+              onClick={() => openCloseAccordian("accordian1")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="text-primary relative mb-0 text-2xl font-medium">
+                <div className="text-primary relative mb-0 text-2xl font-semibold">
                   How does the 7-day free trial work?
                 </div>
                 <Image
                   src={downIcon}
-                  className={` ${isOpen ? "rotate-180" : "rotate-0"} duration-500`}
+                  className={` ${
+                    isOpen.accordian1 ? "rotate-180" : "rotate-0"
+                  } duration-500`}
                   alt=""
                   width={24}
                   height={24}
@@ -121,7 +144,7 @@ const ChoosePlanPage = () => {
               </div>
               <div
                 className={`relative overflow-hidden duration-500 ${
-                  isOpen ? "h-24" : "h-0"
+                  isOpen.accordian1 ? "h-24" : "h-0"
                 } `}
               >
                 <div className="min-h-[1px] pb-6 leading-[1.5] text-[#394547]">
@@ -138,15 +161,18 @@ const ChoosePlanPage = () => {
 
             <div
               className="mb-8 overflow-hidden border-b border-[#ddd]"
-              onClick={openCloseAccordian}
+              onClick={() => openCloseAccordian("accordian2")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="text-primary relative mb-0 text-2xl font-medium">
-                Can I switch subscriptions from monthly to yearly, or yearly to monthly?
+                <div className="text-primary relative mb-0 text-2xl font-semibold">
+                  Can I switch subscriptions from monthly to yearly, or yearly
+                  to monthly?
                 </div>
                 <Image
                   src={downIcon}
-                  className={` ${isOpen ? "rotate-180" : "rotate-0"} duration-500`}
+                  className={` ${
+                    isOpen.accordian2 ? "rotate-180" : "rotate-0"
+                  } duration-500`}
                   alt=""
                   width={24}
                   height={24}
@@ -154,26 +180,31 @@ const ChoosePlanPage = () => {
               </div>
               <div
                 className={`relative overflow-hidden duration-500 ${
-                  isOpen ? "h-24" : "h-0"
+                  isOpen.accordian2 ? "h-24" : "h-0"
                 } `}
               >
                 <div className="min-h-[1px] pb-6 leading-[1.5] text-[#394547]">
-                While an annual plan is active, it is not feasible to switch to a monthly plan. However, once the current month ends, transitioning from a monthly plan to an annual plan is an option.
+                  While an annual plan is active, it is not feasible to switch
+                  to a monthly plan. However, once the current month ends,
+                  transitioning from a monthly plan to an annual plan is an
+                  option.
                 </div>
               </div>
             </div>
 
             <div
               className="mb-8 overflow-hidden border-b border-[#ddd]"
-              onClick={openCloseAccordian}
+              onClick={() => openCloseAccordian("accordian3")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="text-primary relative mb-0 text-2xl font-medium">
-                What's included in the Premium plan?
+                <div className="text-primary relative mb-0 text-2xl font-semibold">
+                  What's included in the Premium plan?
                 </div>
                 <Image
                   src={downIcon}
-                  className={` ${isOpen ? "rotate-180" : "rotate-0"} duration-500`}
+                  className={` ${
+                    isOpen.accordian3 ? "rotate-180" : "rotate-0"
+                  } duration-500`}
                   alt=""
                   width={24}
                   height={24}
@@ -181,26 +212,32 @@ const ChoosePlanPage = () => {
               </div>
               <div
                 className={`relative overflow-hidden duration-500 ${
-                  isOpen ? "h-24" : "h-0"
+                  isOpen.accordian3 ? "h-24" : "h-0"
                 } `}
               >
                 <div className="min-h-[1px] pb-6 leading-[1.5] text-[#394547]">
-                Premium membership provides you with the ultimate Summarist experience, including unrestricted entry to many best-selling books high-quality audio, the ability to download titles for offline reading, and the option to send your reads to your Kindle.
+                  Premium membership provides you with the ultimate Summarist
+                  experience, including unrestricted entry to many best-selling
+                  books high-quality audio, the ability to download titles for
+                  offline reading, and the option to send your reads to your
+                  Kindle.
                 </div>
               </div>
             </div>
 
             <div
               className="mb-8 overflow-hidden border-b border-[#ddd]"
-              onClick={openCloseAccordian}
+              onClick={() => openCloseAccordian("accordian4")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="text-primary relative mb-0 text-2xl font-medium">
+                <div className="text-primary relative mb-0 text-2xl font-semibold">
                   Can I cancel during my trial or subscription?
                 </div>
                 <Image
                   src={downIcon}
-                  className={` ${isOpen ? "rotate-180" : "rotate-0"} duration-500`}
+                  className={` ${
+                    isOpen.accordian4 ? "rotate-180" : "rotate-0"
+                  } duration-500`}
                   alt=""
                   width={24}
                   height={24}
@@ -208,11 +245,14 @@ const ChoosePlanPage = () => {
               </div>
               <div
                 className={`relative overflow-hidden duration-500 ${
-                  isOpen ? "h-24" : "h-0"
+                  isOpen.accordian4 ? "h-24" : "h-0"
                 } `}
               >
                 <div className="min-h-[1px] pb-6 leading-[1.5] text-[#394547]">
-                You will not be charged if you cancel your trial before its conclusion. While you will not have complete access to the entire Summarist library, you can still expand your knowledge with one curated book per day.
+                  You will not be charged if you cancel your trial before its
+                  conclusion. While you will not have complete access to the
+                  entire Summarist library, you can still expand your knowledge
+                  with one curated book per day.
                 </div>
               </div>
             </div>
