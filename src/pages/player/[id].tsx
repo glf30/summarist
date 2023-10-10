@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
 import { useUser } from "@clerk/nextjs";
@@ -30,21 +30,69 @@ export default function BookInfoPage({
   bookInfo,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null); 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const progressRef = useRef<HTMLInputElement | null>(null);
+  const playRef = useRef<number | null>();
+  const [timeProgress, setTimeProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   const { user } = useUser();
 
+  const repeat = useCallback(() => {
+    if(!!playRef.current && !!progressRef.current){
+        const currentTime = audioRef.current?.currentTime;
+        setTimeProgress(Number(currentTime));
+
+        progressRef.current.value = String(currentTime);
+        progressRef.current.style.setProperty(
+            '--range-progress',
+            `${(Number(progressRef.current.value) / duration) * 100}%`
+          );
+
+        playRef.current = requestAnimationFrame(repeat);
+    }
+  },[audioRef, duration, progressRef, setTimeProgress])
+
+  const handleProgressChange = () => {
+    if (!!audioRef.current && !!progressRef.current) {
+      audioRef.current.currentTime = Number(progressRef.current.value);
+    }
+  };
+
   const handlePlay = () => {
     setIsPlaying(!isPlaying);
-  }
+  };
 
   useEffect(() => {
     if (isPlaying) {
-      audioRef.current?.play();
+      audioRef.current?.play(); 
     } else {
       audioRef.current?.pause();
     }
-  }, [isPlaying, audioRef]);
+    playRef.current = requestAnimationFrame(repeat);
+  }, [isPlaying, audioRef, repeat]);
+
+  const onLoadedMetadata = () => {
+    if (!!audioRef.current && !!progressRef.current) {
+      const seconds = audioRef.current?.duration
+      setDuration(seconds);
+      progressRef.current.max = String(seconds);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    if (time && !isNaN(time)) {
+      const minutes = Math.floor(time / 60);
+      const formatMinutes =
+        minutes < 10 ? `0${minutes}` : `${minutes}`;
+      const seconds = Math.floor(time % 60);
+      const formatSeconds =
+        seconds < 10 ? `0${seconds}` : `${seconds}`;
+      return `${formatMinutes}:${formatSeconds}`;
+    }
+    return '00:00';
+  };
+
 
   if (!user) return null;
   return (
@@ -64,7 +112,11 @@ export default function BookInfoPage({
         </div>
       </Layout>
       {/* Audio Player */}
-      <audio src={bookInfo.audioLink} ref={audioRef}/>
+      <audio
+        src={bookInfo.audioLink}
+        ref={audioRef}
+        onLoadedMetadata={onLoadedMetadata}
+      />
       <div className="fixed bottom-0 left-0 z-[9000] mt-auto flex w-full flex-col items-center justify-between bg-[#042330] px-10 py-0 md:h-20 md:flex-row">
         {/* book info */}
         <div className="flex w-full justify-center gap-3 py-3 md:w-[calc(100%/3)] md:justify-normal md:py-0">
@@ -92,7 +144,10 @@ export default function BookInfoPage({
                 className="invert"
               />
             </button>
-            <button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white" onClick={handlePlay}>
+            <button
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white"
+              onClick={handlePlay}
+            >
               {!!isPlaying ? (
                 <Image
                   src={pauseButton}
@@ -124,17 +179,19 @@ export default function BookInfoPage({
         </div>
         {/* progress bar */}
         <div className="flex w-full items-center justify-center gap-4 py-3 md:w-[calc(100%/3)] md:justify-normal md:py-0">
-          <div className="text-sm text-white">00:00</div>
+          <div className="text-sm text-white">{formatTime(timeProgress)}</div>
           <input
             type="range"
             defaultValue={0}
-            className="audio__bar h-1 w-full max-w-[300px] cursor-pointer appearance-none rounded-lg outline-none [&::-webkit-slider-thumb]:bg-white"
+            className="audio__bar h-1 w-full max-w-[300px] cursor-pointer appearance-none rounded-lg outline-none"
             style={{
               background:
-                "linear-gradient(to right, rgb(43, 217, 124) 50%, rgb(109, 120, 125) 50%)",
+                `linear-gradient(to right, rgb(43, 217, 124) ${(timeProgress/duration) *100}%, rgb(109, 120, 125) 0%)`,
             }}
+            ref={progressRef}
+            onChange={handleProgressChange}
           />
-          <div className="text-sm text-white">03:24</div>
+          <div className="text-sm text-white">{formatTime(duration)}</div>
         </div>
       </div>
     </>

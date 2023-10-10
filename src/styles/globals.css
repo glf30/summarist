@@ -559,8 +559,4 @@ button {
     --range-progress: 0%;
   }
 
-  .audio__bar input[type=range]::-webkit-slider-thumb {
-    background: #fff;
-    background-color: #fff;
-  }
 }
