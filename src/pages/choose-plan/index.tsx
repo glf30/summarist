@@ -7,7 +7,6 @@ import plantImg from "public/assets/plant-icon.svg";
 import handsImg from "public/assets/hands-icon.svg";
 import downIcon from "public/assets/down-icon.svg";
 import { useSubscription } from "use-stripe-subscription";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 type accordianTracker = {
@@ -60,7 +59,7 @@ const ChoosePlanPage = () => {
 
   if (!!subscription) router.replace("/for-you");
   if (!isLoaded) return null;
-  
+
   return (
     <div>
       <div className="w-full">

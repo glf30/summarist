@@ -10,6 +10,7 @@ import lightbulbIcon from "public/assets/lightbulb-icon.svg";
 import bookIcon from "public/assets/book-icon.svg";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import { useSubscription } from "use-stripe-subscription";
 
 export const getStaticPaths = (async () => {
   return {
@@ -32,6 +33,7 @@ export default function BookInfoPage({
   bookInfo,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { user } = useUser();
+  const { subscription } = useSubscription();
 
   return (
     <Layout>
@@ -39,7 +41,7 @@ export default function BookInfoPage({
         <div className="w-full">
           {/* Title Section */}
           <div className="text-primary mb-4 text-3xl font-semibold">
-            {bookInfo.title} {bookInfo.subscriptionRequired && `(Premium)`}
+            {bookInfo.title} {(bookInfo.subscriptionRequired && !subscription) && `(Premium)`}
           </div>
           <div className="text-primary mb-4 font-semibold">
             {bookInfo.author}
