@@ -64,7 +64,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
             <div>For you</div>
           </Link>
           <Link
-            href={"/for-you"}
+            href={"/library"}
             className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
@@ -101,7 +101,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
         </div>
         <div className="">
           <Link
-            href={"/for-you"}
+            href={"/settings"}
             className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
