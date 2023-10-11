@@ -1,10 +1,7 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
-import playButton from "public/assets/play-button.svg";
-import BookCard from "~/components/BookComponents/BookCard";
 import Layout from "~/components/LayoutComponents/Layout";
-import { Book } from "~/types/Book";
 import loginImage from "public/assets/login.png";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { useSubscription } from "use-stripe-subscription";
@@ -44,7 +41,7 @@ const SettingsLoggedOut = () => {
 
 const SettingsLoggedIn = () => {
   const { subscription } = useSubscription();
-  console.log(subscription);
+  const { user } = useUser();
   return (
     <>
       <div className="mb-8 border-b border-[#e1e7ea] pb-4 text-2xl font-semibold text-primary">
@@ -72,7 +69,7 @@ const SettingsLoggedIn = () => {
       </div>
 
       <div className="pt-4 text-lg font-semibold text-primary">Email</div>
-      <div className="py-2 text-primary">here@email.yeassss</div>
+      <div className="py-2 text-primary">{user?.emailAddresses[0]?.emailAddress}</div>
     </>
   );
 };
