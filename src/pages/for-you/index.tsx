@@ -101,7 +101,7 @@ const ForYouArea = () => {
           We think you'll like these
         </div>
         {/* Books Container */}
-        <div className="mb-8 flex gap-4 overflow-x-clip">
+        <div className="mb-8 flex gap-4 overflow-x-visible">
           {recommendedBooks?.slice(0,5)
             .map((bookInfo,index) => (
               <BookCard {...bookInfo} key={index} />
@@ -115,7 +115,7 @@ const ForYouArea = () => {
         </div>
         <div className="mb-4 font-light text-[#394547]">Browse these books</div>
         {/* Books Container */}
-        <div className="mb-8 flex gap-4 overflow-x-clip">
+        <div className="mb-8 flex gap-4 overflow-x-visible">
           {suggestedBooks?.slice(0,5)
             .map((bookInfo,index) => (
               <BookCard {...bookInfo} key={index} />
