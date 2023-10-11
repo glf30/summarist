@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import React from "react";
+import React, { useRef, useState } from "react";
 import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import bookIcon from "public/assets/book-icon.svg";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useSubscription } from "use-stripe-subscription";
+import { formatTime } from "~/utils/formatTime";
 
 export const getStaticPaths = (async () => {
   return {
@@ -34,10 +35,24 @@ export default function BookInfoPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { user } = useUser();
   const { subscription } = useSubscription();
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const onLoadedMetadata = () => {
+    if (!!audioRef.current) {
+      const seconds = audioRef.current?.duration;
+      setDuration(seconds);
+    }
+  };
 
   return (
     <Layout>
       <div className="flex flex-col-reverse items-center gap-8 md:flex-row md:items-start md:gap-4">
+        <audio
+          src={bookInfo.audioLink}
+          ref={audioRef}
+          onLoadedMetadata={onLoadedMetadata}
+        />
         <div className="w-full">
           {/* Title Section */}
           <div className="mb-4 text-3xl font-semibold text-primary">
@@ -69,7 +84,7 @@ export default function BookInfoPage({
                 <div className="mr-1 flex h-6 w-6">
                   <Image src={clockIcon} alt="" width={24} height={24} />
                 </div>
-                <div>04:52</div>
+                <div>{formatTime(duration)}</div>
               </div>
               {/* Audio */}
               <div className="flex w-1/2 items-center text-sm font-semibold text-primary">
