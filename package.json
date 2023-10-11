@@ -25,6 +25,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
     "superjson": "^1.13.1",
+    "use-stripe-subscription": "^1.0.6",
     "zod": "^3.21.4"
   },
   "devDependencies": {

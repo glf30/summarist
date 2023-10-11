@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Footer from "~/components/LandingComponents/Footer";
 import pricingImg from "public/assets/pricing-top.png";
@@ -6,12 +6,18 @@ import documentImg from "public/assets/document-icon.svg";
 import plantImg from "public/assets/plant-icon.svg";
 import handsImg from "public/assets/hands-icon.svg";
 import downIcon from "public/assets/down-icon.svg";
+import { useSubscription } from "use-stripe-subscription";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type accordianTracker = {
   [key: string]: boolean;
 };
 
 const ChoosePlanPage = () => {
+  const router = useRouter();
+  const { subscription, isLoaded, products, redirectToCheckout } = useSubscription();
+
   const [activePlan, setActivePlan] = useState("yearly");
   const [isOpen, setIsOpen] = useState<accordianTracker>({
     accordian1: false,
@@ -40,10 +46,25 @@ const ChoosePlanPage = () => {
     setActivePlan(planType);
   };
 
+  const handleConfirmSelection = () => {
+    if (activePlan === "yearly") {
+      redirectToCheckout({
+        price: products[1].prices[0].id
+      });
+    }
+
+    redirectToCheckout({
+      price: products[0].prices[0].id
+    });
+  };
+
+  if (!!subscription) router.replace("/for-you");
+  if (!isLoaded) return null;
+  
   return (
     <div>
       <div className="w-full">
-        <div className='bg-primary relative mb-6 w-full rounded-b-[16rem] pt-12 text-center before:absolute before:left-0 before:top-0 before:-z-[1] before:h-full before:w-full before:content-[""]'>
+        <div className='relative mb-6 w-full rounded-b-[16rem] bg-primary pt-12 text-center before:absolute before:left-0 before:top-0 before:-z-[1] before:h-full before:w-full before:content-[""]'>
           <div className="mx-auto my-0 max-w-[1000px] px-6 py-0 text-white">
             <div className="mb-10 text-5xl font-bold">
               Get unlimited access to many amazing books
@@ -60,7 +81,7 @@ const ChoosePlanPage = () => {
           <div className="w-full py-10">
             <div className="mx-auto mb-14 flex max-w-[800px] flex-col gap-6 text-center md:flex-row">
               <div>
-                <figure className="text-primary mb-3 flex justify-center">
+                <figure className="mb-3 flex justify-center text-primary">
                   <Image src={documentImg} alt="" width={60} height={60} />
                 </figure>
                 <div className="text-[#394547]">
@@ -68,7 +89,7 @@ const ChoosePlanPage = () => {
                 </div>
               </div>
               <div>
-                <figure className="text-primary mb-3 flex justify-center">
+                <figure className="mb-3 flex justify-center text-primary">
                   <Image src={plantImg} alt="" width={60} height={60} />
                 </figure>
                 <div className="text-[#394547]">
@@ -76,7 +97,7 @@ const ChoosePlanPage = () => {
                 </div>
               </div>
               <div>
-                <figure className="text-primary mb-3 flex justify-center">
+                <figure className="mb-3 flex justify-center text-primary">
                   <Image src={handsImg} alt="" width={60} height={60} />
                 </figure>
                 <div className="text-[#394547]">
@@ -84,7 +105,7 @@ const ChoosePlanPage = () => {
                 </div>
               </div>
             </div>
-            <div className="text-primary mb-8 text-center text-4xl font-bold">
+            <div className="mb-8 text-center text-4xl font-bold text-primary">
               Choose the plan that fits you
             </div>
             {/* Plan Cards */}
@@ -102,10 +123,10 @@ const ChoosePlanPage = () => {
                 )}
               </div>
               <div>
-                <div className="text-primary mb-2 text-lg font-semibold">
+                <div className="mb-2 text-lg font-semibold text-primary">
                   Premium Plus Yearly
                 </div>
-                <div className="text-primary mb-2 text-2xl font-bold">
+                <div className="mb-2 text-2xl font-bold text-primary">
                   $99.99/year
                 </div>
                 <div className="text-sm text-[#6b757b]">
@@ -132,17 +153,20 @@ const ChoosePlanPage = () => {
                 )}
               </div>
               <div>
-                <div className="text-primary mb-2 text-lg font-semibold">
+                <div className="mb-2 text-lg font-semibold text-primary">
                   Premium Monthly
                 </div>
-                <div className="text-primary mb-2 text-2xl font-bold">
+                <div className="mb-2 text-2xl font-bold text-primary">
                   $9.99/month
                 </div>
                 <div className="text-sm text-[#6b757b]">No trial included</div>
               </div>
             </div>
             <div className="sticky bottom-0 z-[1] flex flex-col items-center gap-4 bg-white py-8 ">
-              <button className="text-primary flex h-10 w-full min-w-[180px] max-w-[300px] items-center justify-center rounded bg-[#2bd97c] text-base duration-200 hover:bg-[#20ba68]">
+              <button
+                className="flex h-10 w-full min-w-[180px] max-w-[300px] items-center justify-center rounded bg-[#2bd97c] text-base text-primary duration-200 hover:bg-[#20ba68]"
+                onClick={handleConfirmSelection}
+              >
                 {activePlan === "yearly" ? (
                   <span>Start your free 7-day trial</span>
                 ) : (
@@ -167,7 +191,7 @@ const ChoosePlanPage = () => {
               onClick={() => openCloseAccordian("accordian1")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="text-primary relative mb-0 text-2xl font-semibold">
+                <div className="relative mb-0 text-2xl font-semibold text-primary">
                   How does the 7-day free trial work?
                 </div>
                 <Image
@@ -202,7 +226,7 @@ const ChoosePlanPage = () => {
               onClick={() => openCloseAccordian("accordian2")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="text-primary relative mb-0 text-2xl font-semibold">
+                <div className="relative mb-0 text-2xl font-semibold text-primary">
                   Can I switch subscriptions from monthly to yearly, or yearly
                   to monthly?
                 </div>
@@ -235,7 +259,7 @@ const ChoosePlanPage = () => {
               onClick={() => openCloseAccordian("accordian3")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="text-primary relative mb-0 text-2xl font-semibold">
+                <div className="relative mb-0 text-2xl font-semibold text-primary">
                   What's included in the Premium plan?
                 </div>
                 <Image
@@ -268,7 +292,7 @@ const ChoosePlanPage = () => {
               onClick={() => openCloseAccordian("accordian4")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="text-primary relative mb-0 text-2xl font-semibold">
+                <div className="relative mb-0 text-2xl font-semibold text-primary">
                   Can I cancel during my trial or subscription?
                 </div>
                 <Image
