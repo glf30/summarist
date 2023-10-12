@@ -1,6 +1,6 @@
 import { SignOutButton, SignInButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "public/assets/logo.png";
 import Link from "next/link";
 import homeIcon from "public/assets/home-icon.svg";
@@ -12,6 +12,9 @@ import questionIcon from "public/assets/question-icon.svg";
 import logoutIcon from "public/assets/logout-icon.svg";
 import hamburgerIcon from "public/assets/hamburger-menu.svg";
 import { useRouter } from "next/router";
+import { Book } from "~/types/Book";
+import BookCardSearch from "../BookComponents/BookCardSearch";
+import closeIcon from "public/assets/close-icon.svg";
 
 interface LayoutProps {
   children: JSX.Element;
@@ -25,8 +28,8 @@ interface SidebarProps {
 const Layout = ({ children, isPlayer }: LayoutProps) => {
   return (
     <>
-      <div className="relative flex w-full flex-col md:ml-[200px] md:w-[calc(100%-200px)] overflow-y-auto">
-        <SideBar isPlayer={isPlayer}/>
+      <div className="relative flex w-full flex-col overflow-y-auto md:ml-[200px] md:w-[calc(100%-200px)]">
+        <SideBar isPlayer={isPlayer} />
         <SearchArea />
         <div className="mx-auto my-0 w-full max-w-[1070px] px-6 py-0">
           <div className="w-full px-0 py-10">{children}</div>
@@ -55,7 +58,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
         <div className="mt-10 flex-1">
           <Link
             href={"/for-you"}
-            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -65,7 +68,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
           </Link>
           <Link
             href={"/library"}
-            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -80,7 +83,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
           </Link>
           <Link
             href={"/for-you"}
-            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -90,7 +93,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
           </Link>
           <Link
             href={"/for-you"}
-            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -102,7 +105,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
         <div className="">
           <Link
             href={"/settings"}
-            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -117,7 +120,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
           </Link>
           <Link
             href={"/for-you"}
-            className="text-primary mb-2 flex h-14 items-center duration-200 hover:bg-[#f0efef]"
+            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
@@ -132,7 +135,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
           </Link>
           {!!user ? (
             <SignOutButton>
-              <button className="text-primary mb-2 flex h-14 w-full items-center duration-200 hover:bg-[#f0efef]">
+              <button className="mb-2 flex h-14 w-full items-center text-primary duration-200 hover:bg-[#f0efef]">
                 <div className="mr-4 h-full w-1 bg-transparent"></div>
                 <div className="mr-2 flex items-center justify-center">
                   <Image
@@ -147,7 +150,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
             </SignOutButton>
           ) : (
             <SignInButton mode="modal" redirectUrl={asPath}>
-              <button className="text-primary mb-2 flex h-14 w-full items-center duration-200 hover:bg-[#f0efef]">
+              <button className="mb-2 flex h-14 w-full items-center text-primary duration-200 hover:bg-[#f0efef]">
                 <div className="mr-4 h-full w-1 bg-transparent"></div>
                 <div className="mr-2 flex items-center justify-center">
                   <Image
@@ -168,6 +171,39 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
 };
 
 const SearchArea = () => {
+  const [searchedBooks, setSearchedBooks] = useState<Book[]>();
+  const [searchText, setSearchText] = useState("");
+  const [debounceText, setDebounceText] = useState("");
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebounceText(searchText);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [searchText]);
+
+  useEffect(() => {
+    if (!!debounceText) {
+      const getSearchedBooks = async () => {
+        const res = await fetch(
+          `https://us-central1-summaristt.cloudfunctions.net/getBooksByAuthorOrTitle?search=${searchText.toLowerCase()}`,
+        );
+        const data: Book[] = await res.json();
+
+        console.log(data);
+        setSearchedBooks([...data]);
+      };
+      getSearchedBooks();
+    }
+  }, [debounceText]);
+
+  const handleClose = () => {
+    setSearchText("");
+  }
+
   return (
     <div className="z-[1] h-20 w-full border-b border-b-[#e1e7ea] bg-white">
       <div className="relative mx-auto my-0 flex h-full max-w-[1070px] items-center justify-between px-8 py-0">
@@ -183,16 +219,35 @@ const SearchArea = () => {
                 className="h-10 w-full rounded-lg border-2 border-[#e1e7ea] bg-[#f1f6f4] px-4 py-0 text-[#042330] outline-none"
                 placeholder="Search for books"
                 autoComplete="off"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
               />
-              <div className="absolute right-2 flex h-full items-center justify-end border-l-2 border-l-[#e1e7ea] pl-2">
-                <Image src={searchIcon} alt="search icon" />
-              </div>
+              {!!searchText ? (
+                <div className="absolute right-2 flex h-full items-center justify-end border-l-2 border-l-[#e1e7ea] pl-2 cursor-pointer" onClick={handleClose}>
+                  <Image src={closeIcon} alt="close icon" />
+                </div>
+              ) : (
+                <div className="absolute right-2 flex h-full items-center justify-end border-l-2 border-l-[#e1e7ea] pl-2">
+                  <Image src={searchIcon} alt="search icon" />
+                </div>
+              )}
             </div>
           </div>
           <div className="flex cursor-pointer items-center justify-center md:hidden">
             <Image src={hamburgerIcon} alt="home icon" height={24} width={24} />
           </div>
         </div>
+        {!!searchText && searchedBooks && (
+          <div className="absolute right-[24px] top-[104px] ml-auto flex max-h-[640px] w-full max-w-[440px] flex-col overflow-y-auto border border-[#e1e7ea] bg-white p-4 shadow-md">
+            {searchedBooks.length > 0 ? (
+              searchedBooks.map((bookInfo, index) => (
+                <BookCardSearch {...bookInfo} key={index} />
+              ))
+            ) : (
+              <>No books found</>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
