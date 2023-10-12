@@ -81,26 +81,22 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
             </div>
             <div>My Library</div>
           </Link>
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
+          <div
+            className="cursor-not-allowed mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
               <Image src={penIcon} alt="home icon" height={24} width={24} />
             </div>
             <div>Highlights</div>
-          </Link>
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
-          >
+          </div>
+          <div className="mb-2 flex h-14 cursor-not-allowed items-center text-primary duration-200 hover:bg-[#f0efef]">
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
               <Image src={searchIcon} alt="home icon" height={24} width={24} />
             </div>
             <div>Search</div>
-          </Link>
+          </div>
         </div>
         <div className="">
           <Link
@@ -118,10 +114,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
             </div>
             <div>Settings</div>
           </Link>
-          <Link
-            href={"/for-you"}
-            className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
-          >
+          <div className="mb-2 flex h-14 cursor-not-allowed items-center text-primary duration-200 hover:bg-[#f0efef]">
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
               <Image
@@ -132,7 +125,7 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
               />
             </div>
             <div>Help & Support</div>
-          </Link>
+          </div>
           {!!user ? (
             <SignOutButton>
               <button className="mb-2 flex h-14 w-full items-center text-primary duration-200 hover:bg-[#f0efef]">
@@ -202,7 +195,7 @@ const SearchArea = () => {
 
   const handleClose = () => {
     setSearchText("");
-  }
+  };
 
   return (
     <div className="z-[1] h-20 w-full border-b border-b-[#e1e7ea] bg-white">
@@ -223,7 +216,10 @@ const SearchArea = () => {
                 onChange={(e) => setSearchText(e.target.value)}
               />
               {!!searchText ? (
-                <div className="absolute right-2 flex h-full items-center justify-end border-l-2 border-l-[#e1e7ea] pl-2 cursor-pointer" onClick={handleClose}>
+                <div
+                  className="absolute right-2 flex h-full cursor-pointer items-center justify-end border-l-2 border-l-[#e1e7ea] pl-2"
+                  onClick={handleClose}
+                >
                   <Image src={closeIcon} alt="close icon" />
                 </div>
               ) : (
