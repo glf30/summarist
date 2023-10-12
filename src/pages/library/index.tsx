@@ -1,7 +1,5 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import playButton from "public/assets/play-button.svg";
 import BookCard from "~/components/BookComponents/BookCard";
 import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
@@ -38,43 +36,20 @@ const LibraryLoggedIn = () => {
   const { user } = useUser();
   const [favoriteBooks, setFavoriteBooks] = useState<Book[]>([]);
 
-  const userBooks = api.book.getBooksByUserId.useQuery(user?.id as string, {
-    enabled: !!user,
-  });
+  const userBooks = api.book.getBooksByUserId.useQuery(user?.id as string);
 
   useEffect(() => {
     const getFavoriteBooks = async () => {
-      // const res = await fetch(
-      //   "https://us-central1-summaristt.cloudfunctions.net/getBooks?status=suggested",
-      // );
-      // const data: Book[] = await res.json();
-
-      // setFavoriteBooks([...data]);
-      //`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${context.params?.id}`,
-      //console.log(userBooks.data)
-      // const tempFavorites: Book[] = [];
-      // userBooks.data?.filter((book) => book.favorite === true).forEach(async (bookInfo) => {
-      //   const res = await fetch(
-      //     `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookInfo.bookId}`,
-      //   );
-      //   const data: Book = await res.json();
-      //   tempFavorites.push(data);
-      // })
-      // console.log(tempFavorites)
-      // setFavoriteBooks([...tempFavorites]);
-
-      //const tempFavorites: Book[] = [];
       const fetchPromises = userBooks.data
         ?.filter((book) => book.favorite === true)
         .map(async (bookInfo) => {
           const res = await fetch(
             `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookInfo.bookId}`,
           );
-          const data: Book = await res.json();
-          // tempFavorites.push(data);
+          const data: Book = await res.json(); 
           return data;
         });
-
+       
       const collectedData: Book[] = await Promise.all(
         fetchPromises as Promise<Book>[],
       );
@@ -85,11 +60,7 @@ const LibraryLoggedIn = () => {
       getFavoriteBooks();
     }
     
-  }, [userBooks.data]);
-
-  useEffect(() => {
-    console.log(favoriteBooks);
-  }, [favoriteBooks]);
+  }, [userBooks]);
 
   return (
     <>

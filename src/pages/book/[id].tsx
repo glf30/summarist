@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useSubscription } from "use-stripe-subscription";
 import { formatTime } from "~/utils/formatTime";
 import { api } from "~/utils/api";
-import { check } from "prettier";
+
 
 export const getStaticPaths = (async () => {
   return {
@@ -45,6 +45,8 @@ export default function BookInfoPage({
   const { user } = useUser();
   const { subscription } = useSubscription();
   const [duration, setDuration] = useState(0);
+  const [bookLoaded, setBookLoaded] = useState(false);
+  const [saved, setSaved] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [tempBook, setTempBook] = useState<UserBookData>({
@@ -53,7 +55,6 @@ export default function BookInfoPage({
     favorite: false,
     finished: false,
   });
-
   const onLoadedMetadata = () => {
     if (!!audioRef.current) {
       const seconds = audioRef.current?.duration;
@@ -63,9 +64,6 @@ export default function BookInfoPage({
 
   const checkBook = api.book.getById.useQuery(
     { userId: user?.id as string, bookId: bookInfo.id },
-    {
-      enabled: !!user,
-    },
   );
 
   const addBook = api.book.bookAdd.useMutation();
@@ -73,13 +71,13 @@ export default function BookInfoPage({
 
   const handleSaveBook = () => {
     //book exists in database, flip the favorite flag
-
+    console.log("WEWNEIWNEIQWENQIWNEIWENEI");
+    setSaved(true);
+    
     if (!!checkBook.data && !!tempBook.userId) {
       // updateBook.mutate({
-      //   userId: user?.id as string,
-      //   bookId: bookInfo.id,
-      //   favorite: saved,
-      //   finished: false,
+      //   ...tempBook,
+      //   favorite: !tempBook.favorite,
       // });
       setTempBook({
         ...tempBook,
@@ -97,7 +95,7 @@ export default function BookInfoPage({
       //addBook.mutate(newBook);
       setTempBook(newBook);
     }
-    //setSaved(!saved);
+    
   };
 
   useEffect(() => {
@@ -121,21 +119,61 @@ export default function BookInfoPage({
     // }
     // checkBook.refetch();
     // console.log(checkBook.data)
-    if (!!checkBook.data && !!tempBook.userId) {
-      updateBook.mutate(tempBook);
-      checkBook.refetch();
-    } else if (!!user) {
-      addBook.mutate(tempBook);
-      checkBook.refetch();
+    console.log(tempBook);
+    //utils.book.getById.invalidate();
+    if (saved) {
+      
+      if (!!checkBook.data && !!tempBook.userId) {
+        // console.log("HMMMMMMMM")
+        // console.log(checkBook.data);
+        updateBook.mutate(tempBook);
+        // checkBook.refetch();
+      } else if (!!user && !checkBook.data) {
+        console.log("RRRRRRRRRRRRRRRRRRRRRRR");
+        addBook.mutate(tempBook);
+        //checkBook.refetch();
+      }
+      
+      setSaved(false)
     }
+    //checkBook.refetch();
     console.log(checkBook.data);
   }, [tempBook]);
-
+  /**/
   useEffect(() => {
-    if (checkBook.data) {
-      setTempBook({...checkBook.data});
+    console.log(bookLoaded);
+    console.log("QUE");
+    console.log(checkBook.data)
+    if (!!checkBook.data && !bookLoaded) {
+      console.log("uhhhhhhhhh");
+      console.log(checkBook.data);
+      //setTempBook(checkBook.data);
+      
+
+
+      const timeout = setTimeout(() => {
+        setBookLoaded(true);
+        setTempBook(checkBook.data as UserBookData);
+        checkBook.refetch();
+        
+      }, 300);
+  
+      return () => {
+        clearTimeout(timeout);
+      };
+
+
+
+
+      //checkBook.refetch();
     }
-  }, [checkBook.data]);
+    // if(bookLoaded && !!checkBook.data){
+    //   if(checkBook.data.favorite !== tempBook.favorite){
+    //     setTempBook({...tempBook, favorite: !tempBook.favorite})
+    //   }
+    // }
+
+  }, [checkBook]);
 
   //useEffect(() => {}, [checkBook.data]);
 
