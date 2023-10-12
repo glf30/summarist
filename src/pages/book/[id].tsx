@@ -46,7 +46,7 @@ export default function BookInfoPage({
   const { subscription } = useSubscription();
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  //const [saved, setSaved] = useState(false);
+
   const [tempBook, setTempBook] = useState<UserBookData>({
     userId: "",
     bookId: "",
@@ -133,10 +133,9 @@ export default function BookInfoPage({
 
   useEffect(() => {
     if (checkBook.data) {
-      // setSaved(checkBook.data!.favorite);
-      setTempBook(checkBook.data);
+      setTempBook({...checkBook.data});
     }
-  }, []);
+  }, [checkBook.data]);
 
   //useEffect(() => {}, [checkBook.data]);
 

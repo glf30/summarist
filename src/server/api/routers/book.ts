@@ -23,6 +23,24 @@ export const bookRouter = createTRPCRouter({
 
   }),
 
+  getBooksByUserId: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+    const books = ctx.db.book.findMany({
+      where: {
+        userId: input
+      },
+    });
+
+    if (!books) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "book not found",
+      });
+    }
+
+    return books;
+
+  }),
+
   bookAdd: publicProcedure
     .input(z.object({ userId: z.string(), bookId: z.string(), favorite: z.boolean(), finished: z.boolean() }))
     .mutation(({ ctx, input }) => {
