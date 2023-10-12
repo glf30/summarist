@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { Book } from "~/types/Book";
 import BookCardSearch from "../BookComponents/BookCardSearch";
 import closeIcon from "public/assets/close-icon.svg";
+import { api } from "~/utils/api";
 
 interface LayoutProps {
   children: JSX.Element;
@@ -26,6 +27,28 @@ interface SidebarProps {
 }
 
 const Layout = ({ children, isPlayer }: LayoutProps) => {
+  const [isInDB, setisInDB] = useState(false);
+
+  const { user } = useUser();
+  const signedInUser = api.user.getById.useQuery(user?.id as string, {
+    enabled: !!user,
+  });
+  const addUser = api.user.userCreate.useMutation();
+
+  useEffect(() => {
+    if (!!user) {
+      if (signedInUser.data === undefined && isInDB === false) {
+        addUser.mutate({
+          username:
+            (user?.username as string) ??
+            `${user?.emailAddresses[0]?.emailAddress}`,
+          userId: user?.id as string,
+        });
+        setisInDB(true);
+      }
+    }
+  }, [user]);
+
   return (
     <>
       <div className="relative flex w-full flex-col overflow-y-auto md:ml-[200px] md:w-[calc(100%-200px)]">
