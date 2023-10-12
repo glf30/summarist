@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
 import Image from "next/image";
@@ -12,6 +12,8 @@ import { SignInButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useSubscription } from "use-stripe-subscription";
 import { formatTime } from "~/utils/formatTime";
+import { api } from "~/utils/api";
+import { check } from "prettier";
 
 export const getStaticPaths = (async () => {
   return {
@@ -30,6 +32,13 @@ export const getStaticProps: GetStaticProps = (async (context) => {
   bookInfo: Book;
 }>;
 
+type UserBookData = {
+  userId: string;
+  bookId: string;
+  favorite: boolean;
+  finished: boolean;
+};
+
 export default function BookInfoPage({
   bookInfo,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -37,6 +46,13 @@ export default function BookInfoPage({
   const { subscription } = useSubscription();
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  //const [saved, setSaved] = useState(false);
+  const [tempBook, setTempBook] = useState<UserBookData>({
+    userId: "",
+    bookId: "",
+    favorite: false,
+    finished: false,
+  });
 
   const onLoadedMetadata = () => {
     if (!!audioRef.current) {
@@ -44,6 +60,85 @@ export default function BookInfoPage({
       setDuration(seconds);
     }
   };
+
+  const checkBook = api.book.getById.useQuery(
+    { userId: user?.id as string, bookId: bookInfo.id },
+    {
+      enabled: !!user,
+    },
+  );
+
+  const addBook = api.book.bookAdd.useMutation();
+  const updateBook = api.book.updateBook.useMutation();
+
+  const handleSaveBook = () => {
+    //book exists in database, flip the favorite flag
+
+    if (!!checkBook.data && !!tempBook.userId) {
+      // updateBook.mutate({
+      //   userId: user?.id as string,
+      //   bookId: bookInfo.id,
+      //   favorite: saved,
+      //   finished: false,
+      // });
+      setTempBook({
+        ...tempBook,
+        favorite: !tempBook.favorite,
+      });
+    } else {
+      //book does not exist in database, add to database and set favorite to true
+      //if book is not in db, then it cannot have been finished, so set that to false
+      const newBook = {
+        userId: user?.id as string,
+        bookId: bookInfo.id,
+        favorite: true,
+        finished: false,
+      };
+      //addBook.mutate(newBook);
+      setTempBook(newBook);
+    }
+    //setSaved(!saved);
+  };
+
+  useEffect(() => {
+    //book exists in database, flip the favorite flag
+    // if (!!checkBook.data) {
+    //   updateBook.mutate({
+    //     userId: user?.id as string,
+    //     bookId: bookInfo.id,
+    //     favorite: saved,
+    //     finished: false,
+    //   });
+    // } else {
+    //   //book does not exist in database, add to database and set favorite to true
+    //   //if book is not in db, then it cannot have been finished, so set that to false
+    //   addBook.mutate({
+    //     userId: user?.id as string,
+    //     bookId: bookInfo.id,
+    //     favorite: true,
+    //     finished: false,
+    //   });
+    // }
+    // checkBook.refetch();
+    // console.log(checkBook.data)
+    if (!!checkBook.data && !!tempBook.userId) {
+      updateBook.mutate(tempBook);
+      checkBook.refetch();
+    } else if (!!user) {
+      addBook.mutate(tempBook);
+      checkBook.refetch();
+    }
+    console.log(checkBook.data);
+  }, [tempBook]);
+
+  useEffect(() => {
+    if (checkBook.data) {
+      // setSaved(checkBook.data!.favorite);
+      setTempBook(checkBook.data);
+    }
+  }, []);
+
+  //useEffect(() => {}, [checkBook.data]);
 
   return (
     <Layout>
@@ -209,22 +304,48 @@ export default function BookInfoPage({
           {/* Bookmark */}
 
           {!!user ? (
-            <div className="group mb-10 flex cursor-pointer items-center gap-2 text-lg font-semibold text-[#0365f2] ">
-              <div className="flex h-5 w-5">
-                <svg
-                  viewBox="0 0 16 16"
-                  height="24px"
-                  width="24px"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="fill-[#0365f2] duration-200 group-hover:fill-primary"
-                >
-                  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"></path>
-                </svg>
+            tempBook.favorite ? (
+              <div
+                className="group mb-10 flex cursor-pointer items-center gap-2 text-lg font-semibold text-[#0365f2] "
+                onClick={handleSaveBook}
+              >
+                <div className="flex h-5 w-5">
+                  <svg
+                    className="fill-[#0365f2] stroke-[#0365f2] duration-200 group-hover:fill-primary"
+                    stroke-width="0"
+                    viewBox="0 0 16 16"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
+                  </svg>
+                </div>
+                <div className="duration-200 group-hover:text-[#044298]">
+                  Saved in My Library
+                </div>
               </div>
-              <div className="duration-200 group-hover:text-[#044298]">
-                Add title to My Library
+            ) : (
+              <div
+                className="group mb-10 flex cursor-pointer items-center gap-2 text-lg font-semibold text-[#0365f2] "
+                onClick={handleSaveBook}
+              >
+                <div className="flex h-5 w-5">
+                  <svg
+                    viewBox="0 0 16 16"
+                    height="24px"
+                    width="24px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="fill-[#0365f2] duration-200 group-hover:fill-primary"
+                  >
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"></path>
+                  </svg>
+                </div>
+                <div className="duration-200 group-hover:text-[#044298]">
+                  Add title to My Library
+                </div>
               </div>
-            </div>
+            )
           ) : (
             <SignInButton mode="modal" redirectUrl="">
               <div className="group mb-10 flex cursor-pointer items-center gap-2 text-lg font-semibold text-[#0365f2] ">
