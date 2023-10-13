@@ -145,7 +145,7 @@ export default function BookInfoPage({
   if (!user) return null;
   return (
     <>
-      <Layout isPlayer={true}>
+
         <div className="relative h-[calc(100vh-240px)] w-full">
           <div className="mx-auto my-0 max-w-[800px] whitespace-pre-line p-6 pt-0 text-base">
             {/* title */}
@@ -158,7 +158,7 @@ export default function BookInfoPage({
             </div>
           </div>
         </div>
-      </Layout>
+
       {/* Audio Player */}
       <audio
         onEnded={handleEnded}

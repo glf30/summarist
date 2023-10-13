@@ -10,11 +10,7 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const ForYou = () => {
-  return (
-    <Layout>
-      <ForYouArea />
-    </Layout>
-  );
+  return <ForYouArea />;
 };
 
 export default ForYou;
