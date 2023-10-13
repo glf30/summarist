@@ -6,6 +6,8 @@ import loginImage from "public/assets/login.png";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { useSubscription } from "use-stripe-subscription";
 import { useRouter } from "next/router";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const Settings = () => {
   const { user } = useUser();
@@ -40,36 +42,49 @@ const SettingsLoggedOut = () => {
 };
 
 const SettingsLoggedIn = () => {
-  const { subscription } = useSubscription();
+  const { subscription, isLoaded } = useSubscription();
   const { user } = useUser();
   return (
     <>
       <div className="mb-8 border-b border-[#e1e7ea] pb-4 text-2xl font-semibold text-primary">
         Settings
       </div>
-      <div className="border-b border-[#e1e7ea] pb-2">
-        <div className="text-lg font-semibold text-primary">
-          Your Subscription Plan:
-        </div>
-        {!subscription && <div className="py-2 text-primary">Basic</div> }
-        {!!subscription ? (
-          subscription.plan.product === "prod_OnRU8HqeQFRNJg" ? (
-            <div> Premium Plus </div>
-          ) : (
-            <div>Premium</div>
-          )
-        ) : (
-          <Link
-            href={"/choose-plan"}
-            className="mb-4 flex h-10 w-full max-w-[180px] items-center justify-center rounded bg-[#2bd97c] text-base text-primary duration-200 hover:bg-[#20ba68]"
-          >
-            Upgrade to Premium
-          </Link>
-        )}
-      </div>
+      {isLoaded ? (
+        <>
+          <div className="border-b border-[#e1e7ea] pb-2">
+            <div className="text-lg font-semibold text-primary">
+              Your Subscription Plan:
+            </div>
+            {!subscription && <div className="py-2 text-primary">Basic</div>}
+            {!!subscription ? (
+              subscription.plan.product === "prod_OnRU8HqeQFRNJg" ? (
+                <div> Premium Plus </div>
+              ) : (
+                <div>Premium</div>
+              )
+            ) : (
+              <Link
+                href={"/choose-plan"}
+                className="mb-4 flex h-10 w-full max-w-[180px] items-center justify-center rounded bg-[#2bd97c] text-base text-primary duration-200 hover:bg-[#20ba68]"
+              >
+                Upgrade to Premium
+              </Link>
+            )}
+          </div>
 
-      <div className="pt-4 text-lg font-semibold text-primary">Email</div>
-      <div className="py-2 text-primary">{user?.emailAddresses[0]?.emailAddress}</div>
+          <div className="pt-4 text-lg font-semibold text-primary">Email</div>
+          <div className="py-2 text-primary">
+            {user?.emailAddresses[0]?.emailAddress}
+          </div>
+        </>
+      ) : (
+        <>
+          <Skeleton height={20} width={120} />
+          <Skeleton height={20} width={180} />
+          <Skeleton height={20} width={120} />
+          <Skeleton height={20} width={180} />
+        </>
+      )}
     </>
   );
 };
