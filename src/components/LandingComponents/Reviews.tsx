@@ -1,8 +1,10 @@
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 import React from "react";
 import { BsStarFill } from "react-icons/bs";
 
 const Reviews = () => {
+  const { user } = useUser();
   return (
     <section id="reviews">
       <div className="row">
@@ -65,9 +67,15 @@ const Reviews = () => {
             </div>
           </div>
           <div className="reviews__btn--wrapper">
-            <SignInButton mode="modal" redirectUrl="/for-you">
-              <button className="btn home__cta--btn">Login</button>
-            </SignInButton>
+            {!!user ? (
+              <Link href="for-you" className="btn home__cta--btn">
+                Login
+              </Link>
+            ) : (
+              <SignInButton mode="modal" redirectUrl="/for-you">
+                <button className="btn home__cta--btn">Login</button>
+              </SignInButton>
+            )}
           </div>
         </div>
       </div>

@@ -1,9 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import landing from "public/assets/landing.png";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 const Landing = () => {
+  const { user } = useUser();
   return (
     <section id="landing">
       <div className="container__wrapper">
@@ -21,9 +23,15 @@ const Landing = () => {
                 <br className="remove--tablet" />
                 and even people who don't like to read.
               </div>
-              <SignInButton mode="modal" redirectUrl="/for-you">
-                <button className="btn home__cta--btn">Login</button>
-              </SignInButton>
+              {!!user ? (
+                <Link href="for-you" className="btn home__cta--btn">
+                  Login
+                </Link>
+              ) : (
+                <SignInButton mode="modal" redirectUrl="/for-you">
+                  <button className="btn home__cta--btn">Login</button>
+                </SignInButton>
+              )}
             </div>
             <figure className="landing__image--mask">
               <Image src={landing} alt="landing" />

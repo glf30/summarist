@@ -1,9 +1,11 @@
 import React, { Fragment, useState } from "react";
 import Image from "next/image";
 import logo from "public/assets/logo.png";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 const NavBar = () => {
+  const { user } = useUser();
   return (
     <nav className="nav">
       <div className="nav__wrapper">
@@ -11,9 +13,13 @@ const NavBar = () => {
           <Image className="nav__img" src={logo} alt="logo" />
         </figure>
         <ul className="nav__list--wrapper">
-          <SignInButton mode="modal" redirectUrl="/for-you">
-            <li className="nav__list nav__list--login">Login</li>
-          </SignInButton>
+          {!!user ? (
+            <Link href="for-you" className="nav__list nav__list--login">Login</Link>
+          ) : (
+            <SignInButton mode="modal" redirectUrl="/for-you">
+              <li className="nav__list nav__list--login">Login</li>
+            </SignInButton>
+          )}
           <li className="nav__list nav__list--mobile">About</li>
           <li className="nav__list nav__list--mobile">Contact</li>
           <li className="nav__list nav__list--mobile">Help</li>
