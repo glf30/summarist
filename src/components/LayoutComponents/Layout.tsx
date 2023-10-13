@@ -16,6 +16,8 @@ import { Book } from "~/types/Book";
 import BookCardSearch from "../BookComponents/BookCardSearch";
 import closeIcon from "public/assets/close-icon.svg";
 import { api } from "~/utils/api";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 interface LayoutProps {
   children: JSX.Element;
@@ -28,7 +30,7 @@ interface SidebarProps {
 }
 
 interface SearchBarProps {
-  handleSideBar: () => void
+  handleSideBar: () => void;
 }
 
 const Layout = ({ children, isPlayer }: LayoutProps) => {
@@ -45,7 +47,7 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
   const handleSideBar = () => {
     setIsOpen(!isOpen);
     console.log("hey!");
-  }
+  };
 
   useEffect(() => {
     if (!!user) {
@@ -65,10 +67,13 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
     <>
       <div className="relative flex w-full flex-col overflow-y-auto md:ml-[200px] md:w-[calc(100%-200px)]">
         <SideBar isPlayer={isPlayer} isOpen={isOpen} />
-        <SearchArea handleSideBar={handleSideBar}/>
-        {isOpen &&
-        <div className="fixed top-0 left-0 w-full h-full bg-[#3a4649] z-10 opacity-70 pointer-events-auto" onClick={handleSideBar}></div>
-        }
+        <SearchArea handleSideBar={handleSideBar} />
+        {isOpen && (
+          <div
+            className="pointer-events-auto fixed left-0 top-0 z-10 h-full w-full bg-[#3a4649] opacity-70"
+            onClick={handleSideBar}
+          ></div>
+        )}
         <div className="mx-auto my-0 w-full max-w-[1070px] px-6 py-0">
           <div className="w-full px-0 py-10">{children}</div>
         </div>
@@ -84,14 +89,18 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
   const { asPath } = useRouter();
 
   return (
-    <div className={`fixed left-0 top-0 z-50 ${isOpen ? `w-5/6` : `w-0`} h-screen md:w-[200px] md:min-w-[200px] bg-[#f7faf9] md:block transition-all duration-300`}>
+    <div
+      className={`fixed left-0 top-0 z-50 ${
+        isOpen ? `w-5/6` : `w-0`
+      } h-screen bg-[#f7faf9] transition-all duration-300 md:block md:w-[200px] md:min-w-[200px]`}
+    >
       <div className="max-width-[160px] mx-auto my-0 flex h-14 items-center justify-center pt-4">
         <Image src={logo} alt="logo" className="h-10 w-40" />
       </div>
       <div
-        className={`md:flex flex-col justify-between pb-5  ${isOpen ? `flex` : `hidden`}  ${
-          isPlayer ? `h-[calc(100vh-140px)]` : `h-[calc(100vh-60px)]`
-        }  `}
+        className={`flex-col justify-between pb-5 md:flex  ${
+          isOpen ? `flex` : `hidden`
+        }  ${isPlayer ? `h-[calc(100vh-140px)]` : `h-[calc(100vh-60px)]`}  `}
       >
         <div className="mt-10 flex-1">
           <Link
@@ -119,9 +128,7 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
             </div>
             <div>My Library</div>
           </Link>
-          <div
-            className="cursor-not-allowed mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
-          >
+          <div className="mb-2 flex h-14 cursor-not-allowed items-center text-primary duration-200 hover:bg-[#f0efef]">
             <div className="mr-4 h-full w-1 bg-transparent"></div>
             <div className="mr-2 flex items-center justify-center">
               <Image src={penIcon} alt="home icon" height={24} width={24} />
@@ -201,7 +208,6 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
   );
 };
 
-
 const SearchArea = ({ handleSideBar }: SearchBarProps) => {
   const [searchedBooks, setSearchedBooks] = useState<Book[]>();
   const [searchText, setSearchText] = useState("");
@@ -268,18 +274,25 @@ const SearchArea = ({ handleSideBar }: SearchBarProps) => {
               )}
             </div>
           </div>
-          <div className="flex cursor-pointer items-center justify-center md:hidden" onClick={() => handleSideBar()}>
+          <div
+            className="flex cursor-pointer items-center justify-center md:hidden"
+            onClick={() => handleSideBar()}
+          >
             <Image src={hamburgerIcon} alt="home icon" height={24} width={24} />
           </div>
         </div>
         {!!searchText && searchedBooks && (
           <div className="absolute right-[24px] top-[104px] ml-auto flex max-h-[640px] w-full max-w-[440px] flex-col overflow-y-auto border border-[#e1e7ea] bg-white p-4 shadow-md">
-            {searchedBooks.length > 0 ? (
-              searchedBooks.map((bookInfo, index) => (
-                <BookCardSearch {...bookInfo} key={index} />
-              ))
+            {!!debounceText ? (
+              searchedBooks.length > 0 ? (
+                searchedBooks.map((bookInfo, index) => (
+                  <BookCardSearch {...bookInfo} key={index} />
+                ))
+              ) : (
+                <>No books found</>
+              )
             ) : (
-              <>No books found</>
+              <Skeleton containerClassName="flex-1" height={110} count={5} />
             )}
           </div>
         )}
