@@ -34,6 +34,8 @@ const config = {
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/prefer-string-starts-ends-with": "off",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off",
+    "@next/next/no-img-element": "off",
     "react-hooks/exhaustive-deps": "off",
     "react/jsx-key": "off",
     "react/no-unescaped-entities": "off"
