@@ -8,6 +8,14 @@ import backButton from "public/assets/back-button.svg";
 import forwardButton from "public/assets/forward-button.svg";
 import playButton from "public/assets/play-button.svg";
 import pauseButton from "public/assets/pause-button.svg";
+import { api } from "~/utils/api";
+
+type UserBookData = {
+  userId: string;
+  bookId: string;
+  favorite: boolean;
+  finished: boolean;
+};
 
 export const getStaticPaths = (async () => {
   return {
@@ -39,19 +47,19 @@ export default function BookInfoPage({
   const { user } = useUser();
 
   const repeat = useCallback(() => {
-    if(!!playRef.current && !!progressRef.current){
-        const currentTime = audioRef.current?.currentTime;
-        setTimeProgress(Number(currentTime));
+    if (!!playRef.current && !!progressRef.current) {
+      const currentTime = audioRef.current?.currentTime;
+      setTimeProgress(Number(currentTime));
 
-        progressRef.current.value = String(currentTime);
-        progressRef.current.style.setProperty(
-            '--range-progress',
-            `${(Number(progressRef.current.value) / duration) * 100}%`
-          );
+      progressRef.current.value = String(currentTime);
+      progressRef.current.style.setProperty(
+        "--range-progress",
+        `${(Number(progressRef.current.value) / duration) * 100}%`,
+      );
 
-        playRef.current = requestAnimationFrame(repeat);
+      playRef.current = requestAnimationFrame(repeat);
     }
-  },[audioRef, duration, progressRef, setTimeProgress])
+  }, [audioRef, duration, progressRef, setTimeProgress]);
 
   const handleProgressChange = () => {
     if (!!audioRef.current && !!progressRef.current) {
@@ -63,9 +71,21 @@ export default function BookInfoPage({
     setIsPlaying(!isPlaying);
   };
 
+  const skipForward = () => {
+    if (!!audioRef.current) {
+      audioRef.current.currentTime += 15;
+    }
+  };
+
+  const skipBackward = () => {
+    if (!!audioRef.current) {
+      audioRef.current.currentTime -= 15;
+    }
+  };
+
   useEffect(() => {
     if (isPlaying) {
-      audioRef.current?.play(); 
+      audioRef.current?.play();
     } else {
       audioRef.current?.pause();
     }
@@ -74,7 +94,7 @@ export default function BookInfoPage({
 
   const onLoadedMetadata = () => {
     if (!!audioRef.current && !!progressRef.current) {
-      const seconds = audioRef.current?.duration
+      const seconds = audioRef.current?.duration;
       setDuration(seconds);
       progressRef.current.max = String(seconds);
     }
@@ -83,16 +103,44 @@ export default function BookInfoPage({
   const formatTime = (time: number) => {
     if (time && !isNaN(time)) {
       const minutes = Math.floor(time / 60);
-      const formatMinutes =
-        minutes < 10 ? `0${minutes}` : `${minutes}`;
+      const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
       const seconds = Math.floor(time % 60);
-      const formatSeconds =
-        seconds < 10 ? `0${seconds}` : `${seconds}`;
+      const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
       return `${formatMinutes}:${formatSeconds}`;
     }
-    return '00:00';
+    return "00:00";
   };
 
+  const checkBook = api.book.getById.useQuery({
+    userId: user?.id as string,
+    bookId: bookInfo.id,
+  });
+
+  const addBook = api.book.bookAdd.useMutation();
+  const updateBook = api.book.updateBook.useMutation();
+
+  const handleEnded = () => {
+    if (!!audioRef.current) {
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+
+      //book is already in database
+      if (!!checkBook.data) {
+        updateBook.mutate({
+        ...checkBook.data as UserBookData,
+        finished: true
+      });
+      } else {
+        //book is not in db
+        addBook.mutate({
+          userId: user?.id as string,
+          bookId: bookInfo.id,
+          favorite: false,
+          finished: true,
+        });
+      }
+    }
+  };
 
   if (!user) return null;
   return (
@@ -101,11 +149,11 @@ export default function BookInfoPage({
         <div className="relative h-[calc(100vh-240px)] w-full">
           <div className="mx-auto my-0 max-w-[800px] whitespace-pre-line p-6 pt-0 text-base">
             {/* title */}
-            <div className="text-primary mb-8 border-b border-[#e1e7ea] pb-4 text-2xl font-semibold">
+            <div className="mb-8 border-b border-[#e1e7ea] pb-4 text-2xl font-semibold text-primary">
               {bookInfo.title}
             </div>
             {/* summary */}
-            <div className="text-primary whitespace-pre-line leading-[1.4rem]">
+            <div className="whitespace-pre-line leading-[1.4rem] text-primary">
               {bookInfo.summary}
             </div>
           </div>
@@ -113,6 +161,7 @@ export default function BookInfoPage({
       </Layout>
       {/* Audio Player */}
       <audio
+        onEnded={handleEnded}
         src={bookInfo.audioLink}
         ref={audioRef}
         onLoadedMetadata={onLoadedMetadata}
@@ -135,7 +184,10 @@ export default function BookInfoPage({
         {/* audio controller */}
         <div className="md:w-[calc(100%/3)]">
           <div className="flex items-center justify-center gap-6 py-4 md:py-0">
-            <button className="cursor-pointer rounded-full ">
+            <button
+              className="cursor-pointer rounded-full"
+              onClick={skipBackward}
+            >
               <Image
                 src={backButton}
                 width={28}
@@ -166,7 +218,10 @@ export default function BookInfoPage({
                 />
               )}
             </button>
-            <button className="cursor-pointer rounded-full">
+            <button
+              className="cursor-pointer rounded-full"
+              onClick={skipForward}
+            >
               <Image
                 src={forwardButton}
                 width={28}
@@ -185,8 +240,9 @@ export default function BookInfoPage({
             defaultValue={0}
             className="audio__bar h-1 w-full max-w-[300px] cursor-pointer appearance-none rounded-lg outline-none"
             style={{
-              background:
-                `linear-gradient(to right, rgb(43, 217, 124) ${(timeProgress/duration) *100}%, rgb(109, 120, 125) 0%)`,
+              background: `linear-gradient(to right, rgb(43, 217, 124) ${
+                (timeProgress / duration) * 100
+              }%, rgb(109, 120, 125) 0%)`,
             }}
             ref={progressRef}
             onChange={handleProgressChange}

@@ -35,32 +35,64 @@ const LibraryLoggedOut = () => {
 const LibraryLoggedIn = () => {
   const { user } = useUser();
   const [favoriteBooks, setFavoriteBooks] = useState<Book[]>([]);
+  const [finishedBooks, setFinishedBooks] = useState<Book[]>([]);
 
-  const userBooks = api.book.getBooksByUserId.useQuery(user?.id as string);
+  const { data, refetch } = api.book.getBooksByUserId.useQuery(user?.id as string);
 
   useEffect(() => {
     const getFavoriteBooks = async () => {
-      const fetchPromises = userBooks.data
+      console.log("hey!");
+      const fetchPromises = data
         ?.filter((book) => book.favorite === true)
         .map(async (bookInfo) => {
+          console.log(bookInfo)
           const res = await fetch(
             `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookInfo.bookId}`,
           );
-          const data: Book = await res.json(); 
+          const data: Book = await res.json();
           return data;
         });
-       
+
       const collectedData: Book[] = await Promise.all(
         fetchPromises as Promise<Book>[],
       );
 
-      setFavoriteBooks([...collectedData]);
+        setFavoriteBooks([...collectedData]);
+        // for a bug, potentially a caching bug, where the data fetched will not be updated after fetch, refetch query to ensure we can get it to hit the empty check AFTER the incorrect data from the promise has been set
+        refetch();
     };
-    if(!!userBooks.data){
-      getFavoriteBooks();
+    if (!!data) {
+      // for a bug, potentially a caching bug, where the data fetched will not be updated after fetch
+      if ((data?.filter((book) => book.favorite === true)).length !== 0) {
+        getFavoriteBooks();
+      } else {
+        setFavoriteBooks([]);
+      }
     }
-    
-  }, [userBooks]);
+  }, [data]);
+
+  useEffect(() => {
+    const getFinishedBooks = async () => {
+      const fetchPromises = data
+        ?.filter((book) => book.finished === true)
+        .map(async (bookInfo) => {
+          const res = await fetch(
+            `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookInfo.bookId}`,
+          );
+          const data: Book = await res.json();
+          return data;
+        });
+
+      const collectedData: Book[] = await Promise.all(
+        fetchPromises as Promise<Book>[],
+      );
+
+      setFinishedBooks([...collectedData]);
+    };
+    if (!!data && finishedBooks.length === 0) {
+      getFinishedBooks();
+    }
+  }, [data]);
 
   return (
     <>
@@ -91,16 +123,26 @@ const LibraryLoggedIn = () => {
         <div className="mb-3 text-2xl font-bold text-primary">
           Finished Books
         </div>
-        <div className="mb-4 font-light text-[#394547]">0 items</div>
-        {/* map through favorites here */}
-        <div className="mx-auto mb-14 flex max-w-fit flex-col items-center gap-2 rounded-xl bg-[#f1f6f4] p-8 text-center">
-          <div className="text-lg font-semibold text-[#042330]">
-            Done and dusted!
-          </div>
-          <div className="text-[#394547]">
-            When you finish a book, you can find it here later
-          </div>
+        <div className="mb-4 font-light text-[#394547]">
+          {finishedBooks.length} items
         </div>
+        {/* map through favorites here */}
+        {finishedBooks.length > 0 ? (
+          <div className="mb-8 flex gap-4 overflow-x-visible">
+            {finishedBooks.map((bookInfo, index) => (
+              <BookCard {...bookInfo} key={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="mx-auto mb-14 flex max-w-fit flex-col items-center gap-2 rounded-xl bg-[#f1f6f4] p-8 text-center">
+            <div className="text-lg font-semibold text-[#042330]">
+              Done and dusted!
+            </div>
+            <div className="text-[#394547]">
+              When you finish a book, you can find it here later
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
