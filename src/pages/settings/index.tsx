@@ -51,7 +51,7 @@ const SettingsLoggedIn = () => {
         <div className="text-lg font-semibold text-primary">
           Your Subscription Plan:
         </div>
-        <div className="py-2 text-primary">Basic</div>
+        {!subscription && <div className="py-2 text-primary">Basic</div> }
         {!!subscription ? (
           subscription.plan.product === "prod_OnRU8HqeQFRNJg" ? (
             <div> Premium Plus </div>
