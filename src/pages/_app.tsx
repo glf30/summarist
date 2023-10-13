@@ -17,13 +17,17 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   const [isLoading, setIsLoading] = useState(false);
   const Layout = DefaultLayout;
   const isPlayer = router.pathname.slice(0, 7) === "/player";
-
+  let timeout: NodeJS.Timeout;
+  
   useEffect(() => {
     const handleRouteChangeStart = () => {
-      setIsLoading(true);
+      timeout = setTimeout(() => {
+        setIsLoading(true);
+      }, 300);
     };
 
     const handleRouteChangeComplete = () => {
+      clearTimeout(timeout);
       setIsLoading(false);
     };
 
