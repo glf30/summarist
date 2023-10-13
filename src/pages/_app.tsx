@@ -37,6 +37,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     return () => {
       router.events.off("routeChangeStart", handleRouteChangeStart);
       router.events.off("routeChangeComplete", handleRouteChangeComplete);
+      clearTimeout(timeout);
     };
   }, [router]);
 
