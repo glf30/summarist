@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
-import Layout from "~/components/LayoutComponents/Layout";
 import loginImage from "public/assets/login.png";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { useSubscription } from "use-stripe-subscription";
@@ -12,7 +11,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 const Settings = () => {
   const { user } = useUser();
   return (
-    <Layout>{!!user ? <SettingsLoggedIn /> : <SettingsLoggedOut />}</Layout>
+    <>{!!user ? <SettingsLoggedIn /> : <SettingsLoggedOut />}</>
   );
 };
 
@@ -78,12 +77,12 @@ const SettingsLoggedIn = () => {
           </div>
         </>
       ) : (
-        <>
+        <SkeletonTheme baseColor="#f4f4f5" highlightColor="#d4d4d4">
           <Skeleton height={20} width={120} />
           <Skeleton height={20} width={180} />
           <Skeleton height={20} width={120} />
           <Skeleton height={20} width={180} />
-        </>
+        </SkeletonTheme>
       )}
     </>
   );

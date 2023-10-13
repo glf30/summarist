@@ -1,6 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import React, { useEffect, useRef, useState } from "react";
-import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
 import Image from "next/image";
 import starIcon from "public/assets/star-icon.svg";
@@ -119,10 +118,7 @@ export default function BookInfoPage({
     }
   }, [checkBook]);
 
-  //useEffect(() => {}, [checkBook.data]);
-
   return (
-    <Layout>
       <div className="flex flex-col-reverse items-center gap-8 md:flex-row md:items-start md:gap-4">
         <audio
           src={bookInfo.audioLink}
@@ -378,7 +374,6 @@ export default function BookInfoPage({
           </figure>
         </div>
       </div>
-    </Layout>
   );
 }
 

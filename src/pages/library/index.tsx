@@ -12,7 +12,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 const Library = () => {
   const { user } = useUser();
-  return <Layout>{!!user ? <LibraryLoggedIn /> : <LibraryLoggedOut />}</Layout>;
+  return <>{!!user ? <LibraryLoggedIn /> : <LibraryLoggedOut />}</>;
 };
 
 export default Library;
