@@ -6,6 +6,9 @@ import { Book } from "~/types/Book";
 import loginImage from "public/assets/login.png";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
+import BookCardSkeleton from "~/components/BookComponents/BookCardSkeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const Library = () => {
   const { user } = useUser();
@@ -37,7 +40,9 @@ const LibraryLoggedIn = () => {
   const [favoriteBooks, setFavoriteBooks] = useState<Book[]>([]);
   const [finishedBooks, setFinishedBooks] = useState<Book[]>([]);
 
-  const { data, refetch } = api.book.getBooksByUserId.useQuery(user?.id as string);
+  const { data, isLoading, refetch } = api.book.getBooksByUserId.useQuery(
+    user?.id as string,
+  );
 
   useEffect(() => {
     const getFavoriteBooks = async () => {
@@ -45,7 +50,7 @@ const LibraryLoggedIn = () => {
       const fetchPromises = data
         ?.filter((book) => book.favorite === true)
         .map(async (bookInfo) => {
-          console.log(bookInfo)
+          console.log(bookInfo);
           const res = await fetch(
             `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookInfo.bookId}`,
           );
@@ -57,9 +62,9 @@ const LibraryLoggedIn = () => {
         fetchPromises as Promise<Book>[],
       );
 
-        setFavoriteBooks([...collectedData]);
-        // for a bug, potentially a caching bug, where the data fetched will not be updated after fetch, refetch query to ensure we can get it to hit the empty check AFTER the incorrect data from the promise has been set
-        refetch();
+      setFavoriteBooks([...collectedData]);
+      // for a bug, potentially a caching bug, where the data fetched will not be updated after fetch, refetch query to ensure we can get it to hit the empty check AFTER the incorrect data from the promise has been set
+      refetch();
     };
     if (!!data) {
       // for a bug, potentially a caching bug, where the data fetched will not be updated after fetch
@@ -95,14 +100,26 @@ const LibraryLoggedIn = () => {
   }, [data]);
 
   return (
-    <>
+    <SkeletonTheme baseColor="#f4f4f5" highlightColor="#d4d4d4">
       <div>
         <div className="mb-3 text-2xl font-bold text-primary">Saved Books</div>
-        <div className="mb-4 font-light text-[#394547]">
-          {favoriteBooks.length} items
-        </div>
+        {isLoading ? (
+          <Skeleton width={40} />
+        ) : (
+          <div className="mb-4 font-light text-[#394547]">
+            {favoriteBooks.length} items
+          </div>
+        )}
         {/* map through favorites here */}
-        {favoriteBooks.length > 0 ? (
+        {isLoading ? (
+          <div className="mb-8 flex gap-4 overflow-x-visible">
+            {Array(5)
+              .fill(0)
+              .map((_, index) => (
+                <BookCardSkeleton key={index} />
+              ))}
+          </div>
+        ) : favoriteBooks.length > 0 ? (
           <div className="mb-8 flex gap-4 overflow-x-visible">
             {favoriteBooks.map((bookInfo, index) => (
               <BookCard {...bookInfo} key={index} />
@@ -123,11 +140,23 @@ const LibraryLoggedIn = () => {
         <div className="mb-3 text-2xl font-bold text-primary">
           Finished Books
         </div>
-        <div className="mb-4 font-light text-[#394547]">
-          {finishedBooks.length} items
-        </div>
-        {/* map through favorites here */}
-        {finishedBooks.length > 0 ? (
+        {isLoading ? (
+          <Skeleton width={40} />
+        ) : (
+          <div className="mb-4 font-light text-[#394547]">
+            {finishedBooks.length} items
+          </div>
+        )}
+
+        {isLoading ? (
+          <div className="mb-8 flex gap-4 overflow-x-visible">
+            {Array(5)
+              .fill(0)
+              .map((_, index) => (
+                <BookCardSkeleton key={index} />
+              ))}
+          </div>
+        ) : finishedBooks.length > 0 ? (
           <div className="mb-8 flex gap-4 overflow-x-visible">
             {finishedBooks.map((bookInfo, index) => (
               <BookCard {...bookInfo} key={index} />
@@ -139,11 +168,11 @@ const LibraryLoggedIn = () => {
               Done and dusted!
             </div>
             <div className="text-[#394547]">
-              When you finish a book, you can find it here later
+              When you finish a book, you can find it here later.
             </div>
           </div>
         )}
       </div>
-    </>
+    </SkeletonTheme>
   );
 };

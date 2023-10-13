@@ -5,7 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 const BookCardSkeleton = () => {
   return (
     <SkeletonTheme baseColor="#f4f4f5" highlightColor="#d4d4d4">
-      <div className="relative w-full max-w-[200px] rounded px-3 pb-3 pt-8 duration-200 hover:bg-[#f1f6f4]">
+      <div className="relative w-full max-w-[200px] rounded px-3 pb-3 pt-8">
         <figure className="h-[172px] w-[172px]">
           <Skeleton width={172} height={172} />
         </figure>

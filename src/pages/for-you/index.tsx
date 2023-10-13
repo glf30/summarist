@@ -103,9 +103,11 @@ const ForYouArea = () => {
           </div>
         </Link>
       ) : (
-        <div className="mb-6 flex w-[calc((100%/3)*2)]">
-          <Skeleton containerClassName="flex-1" height={188} />
-        </div>
+        <SkeletonTheme baseColor="#f4f4f5" highlightColor="#d4d4d4">
+          <div className="mb-6 flex w-[calc((100%/3)*2)]">
+            <Skeleton containerClassName="flex-1" height={188} />
+          </div>{" "}
+        </SkeletonTheme>
       )}
       {/* Recommended Section */}
       <div>
