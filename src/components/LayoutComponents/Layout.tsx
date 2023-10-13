@@ -24,6 +24,11 @@ interface LayoutProps {
 
 interface SidebarProps {
   isPlayer?: boolean;
+  isOpen: boolean;
+}
+
+interface SearchBarProps {
+  handleSideBar: () => void
 }
 
 const Layout = ({ children, isPlayer }: LayoutProps) => {
@@ -34,6 +39,13 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
     enabled: !!user,
   });
   const addUser = api.user.userCreate.useMutation();
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleSideBar = () => {
+    setIsOpen(!isOpen);
+    console.log("hey!");
+  }
 
   useEffect(() => {
     if (!!user) {
@@ -52,8 +64,11 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
   return (
     <>
       <div className="relative flex w-full flex-col overflow-y-auto md:ml-[200px] md:w-[calc(100%-200px)]">
-        <SideBar isPlayer={isPlayer} />
-        <SearchArea />
+        <SideBar isPlayer={isPlayer} isOpen={isOpen} />
+        <SearchArea handleSideBar={handleSideBar}/>
+        {isOpen &&
+        <div className="fixed top-0 left-0 w-full h-full bg-[#3a4649] z-10 opacity-70 pointer-events-auto" onClick={handleSideBar}></div>
+        }
         <div className="mx-auto my-0 w-full max-w-[1070px] px-6 py-0">
           <div className="w-full px-0 py-10">{children}</div>
         </div>
@@ -64,17 +79,17 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
 
 export default Layout;
 
-const SideBar = ({ isPlayer }: SidebarProps) => {
+const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
   const { user } = useUser();
   const { asPath } = useRouter();
 
   return (
-    <div className="fixed left-0 top-0 z-50 hidden h-screen w-[200px] min-w-[200px] bg-[#f7faf9] md:block">
+    <div className={`fixed left-0 top-0 z-50 ${isOpen ? `w-5/6` : `w-0`} h-screen md:w-[200px] md:min-w-[200px] bg-[#f7faf9] md:block transition-all duration-300`}>
       <div className="max-width-[160px] mx-auto my-0 flex h-14 items-center justify-center pt-4">
         <Image src={logo} alt="logo" className="h-10 w-40" />
       </div>
       <div
-        className={`flex flex-col justify-between pb-5 ${
+        className={`md:flex flex-col justify-between pb-5  ${isOpen ? `flex` : `hidden`}  ${
           isPlayer ? `h-[calc(100vh-140px)]` : `h-[calc(100vh-60px)]`
         }  `}
       >
@@ -186,7 +201,8 @@ const SideBar = ({ isPlayer }: SidebarProps) => {
   );
 };
 
-const SearchArea = () => {
+
+const SearchArea = ({ handleSideBar }: SearchBarProps) => {
   const [searchedBooks, setSearchedBooks] = useState<Book[]>();
   const [searchText, setSearchText] = useState("");
   const [debounceText, setDebounceText] = useState("");
@@ -252,7 +268,7 @@ const SearchArea = () => {
               )}
             </div>
           </div>
-          <div className="flex cursor-pointer items-center justify-center md:hidden">
+          <div className="flex cursor-pointer items-center justify-center md:hidden" onClick={() => handleSideBar()}>
             <Image src={hamburgerIcon} alt="home icon" height={24} width={24} />
           </div>
         </div>
