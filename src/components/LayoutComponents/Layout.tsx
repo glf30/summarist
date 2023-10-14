@@ -16,7 +16,7 @@ import { Book } from "~/types/Book";
 import BookCardSearch from "../BookComponents/BookCardSearch";
 import closeIcon from "public/assets/close-icon.svg";
 import { api } from "~/utils/api";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 interface LayoutProps {
@@ -85,7 +85,7 @@ export default Layout;
 
 const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
   const { user } = useUser();
-  const { asPath } = useRouter();
+  const { asPath, pathname } = useRouter();
 
   return (
     <div
@@ -106,7 +106,11 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
             href={"/for-you"}
             className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
+            <div
+              className={`mr-4 h-full w-1 ${
+                pathname === "/for-you" ? `bg-[#2bd97c]` : `bg-transparent`
+              } `}
+            ></div>
             <div className="mr-2 flex items-center justify-center">
               <Image src={homeIcon} alt="home icon" height={24} width={24} />
             </div>
@@ -116,7 +120,12 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
             href={"/library"}
             className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
+            <div
+              className={`mr-4 h-full w-1 ${
+                pathname === "/library" ? `bg-[#2bd97c]` : `bg-transparent`
+              } `}
+            ></div>
+
             <div className="mr-2 flex items-center justify-center">
               <Image
                 src={bookmarkIcon}
@@ -147,7 +156,11 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
             href={"/settings"}
             className="mb-2 flex h-14 items-center text-primary duration-200 hover:bg-[#f0efef]"
           >
-            <div className="mr-4 h-full w-1 bg-transparent"></div>
+            <div
+              className={`mr-4 h-full w-1 ${
+                pathname === "/settings" ? `bg-[#2bd97c]` : `bg-transparent`
+              } `}
+            ></div>
             <div className="mr-2 flex items-center justify-center">
               <Image
                 src={settingsIcon}
