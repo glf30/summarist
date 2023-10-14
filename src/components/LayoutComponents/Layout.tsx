@@ -99,7 +99,7 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
       <div
         className={`flex-col justify-between pb-5 md:flex  ${
           isOpen ? `flex` : `hidden`
-        }  ${isPlayer ? `h-[calc(100vh-140px)]` : `h-[calc(100vh-60px)]`}  `}
+        }  ${isPlayer ? `h-[calc(100vh-240px)] md:h-[calc(100vh-140px)]` : `h-[calc(100vh-60px)]`}  `}
       >
         <div className="mt-10 flex-1">
           <Link
