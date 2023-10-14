@@ -63,7 +63,7 @@ const ChoosePlanPage = () => {
   return (
     <div>
       <div className="w-full">
-        <div className='relative mb-6 w-full rounded-b-[16rem] bg-primary pt-12 text-center before:absolute before:left-0 before:top-0 before:-z-[1] before:h-full before:w-full before:content-[""]'>
+        <div className='relative mb-6 w-full md:rounded-b-[16rem] bg-primary pt-12 text-center before:absolute before:left-0 before:top-0 before:-z-[1] before:h-full before:w-full before:content-[""]'>
           <div className="mx-auto my-0 max-w-[1000px] px-6 py-0 text-white">
             <div className="mb-10 text-5xl font-bold">
               Get unlimited access to many amazing books
@@ -76,7 +76,7 @@ const ChoosePlanPage = () => {
             </figure>
           </div>
         </div>
-        <div className="px-auto mx-auto my-0 w-full max-w-[1070px] py-0">
+        <div className="w-full max-w-[1070px] mx-auto my-0 px-6 py-0">
           <div className="w-full py-10">
             <div className="mx-auto mb-14 flex max-w-[800px] flex-col gap-6 text-center md:flex-row">
               <div>
@@ -190,7 +190,7 @@ const ChoosePlanPage = () => {
               onClick={() => openCloseAccordian("accordian1")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="relative mb-0 text-2xl font-semibold text-primary">
+                <div className="relative mb-0 text-xl md:text-2xl font-semibold text-primary">
                   How does the 7-day free trial work?
                 </div>
                 <Image
@@ -208,7 +208,7 @@ const ChoosePlanPage = () => {
                   isOpen.accordian1 ? "h-24" : "h-0"
                 } `}
               >
-                <div className="min-h-[1px] pb-6 leading-[1.5] text-[#394547]">
+                <div className="min-h-[1px] pb-6 leading-[1.5] text-sm md:text-base text-[#394547]">
                   Begin your complimentary 7-day trial with a Summarist annual
                   membership. You are under no obligation to continue your
                   subscription, and you will only be billed when the trial
@@ -225,7 +225,7 @@ const ChoosePlanPage = () => {
               onClick={() => openCloseAccordian("accordian2")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="relative mb-0 text-2xl font-semibold text-primary">
+                <div className="relative mb-0 text-xl md:text-2xl font-semibold text-primary">
                   Can I switch subscriptions from monthly to yearly, or yearly
                   to monthly?
                 </div>
@@ -244,7 +244,7 @@ const ChoosePlanPage = () => {
                   isOpen.accordian2 ? "h-24" : "h-0"
                 } `}
               >
-                <div className="min-h-[1px] pb-6 leading-[1.5] text-[#394547]">
+                <div className="min-h-[1px] pb-6 leading-[1.5] text-sm md:text-base text-[#394547]">
                   While an annual plan is active, it is not feasible to switch
                   to a monthly plan. However, once the current month ends,
                   transitioning from a monthly plan to an annual plan is an
@@ -258,7 +258,7 @@ const ChoosePlanPage = () => {
               onClick={() => openCloseAccordian("accordian3")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="relative mb-0 text-2xl font-semibold text-primary">
+                <div className="relative mb-0 text-xl md:text-2xl font-semibold text-primary">
                   What's included in the Premium plan?
                 </div>
                 <Image
@@ -276,7 +276,7 @@ const ChoosePlanPage = () => {
                   isOpen.accordian3 ? "h-24" : "h-0"
                 } `}
               >
-                <div className="min-h-[1px] pb-6 leading-[1.5] text-[#394547]">
+                <div className="min-h-[1px] pb-6 leading-[1.5] text-sm md:text-base text-[#394547]">
                   Premium membership provides you with the ultimate Summarist
                   experience, including unrestricted entry to many best-selling
                   books high-quality audio, the ability to download titles for
@@ -291,7 +291,7 @@ const ChoosePlanPage = () => {
               onClick={() => openCloseAccordian("accordian4")}
             >
               <div className="flex cursor-pointer items-center justify-between gap-2 py-6">
-                <div className="relative mb-0 text-2xl font-semibold text-primary">
+                <div className="relative mb-0 text-xl md:text-2xl font-semibold text-primary">
                   Can I cancel during my trial or subscription?
                 </div>
                 <Image
@@ -309,7 +309,7 @@ const ChoosePlanPage = () => {
                   isOpen.accordian4 ? "h-24" : "h-0"
                 } `}
               >
-                <div className="min-h-[1px] pb-6 leading-[1.5] text-[#394547]">
+                <div className="min-h-[1px] pb-6 leading-[1.5] text-sm md:text-base text-[#394547]">
                   You will not be charged if you cancel your trial before its
                   conclusion. While you will not have complete access to the
                   entire Summarist library, you can still expand your knowledge
