@@ -8,6 +8,7 @@ import forwardButton from "public/assets/forward-button.svg";
 import playButton from "public/assets/play-button.svg";
 import pauseButton from "public/assets/pause-button.svg";
 import { api } from "~/utils/api";
+import { useSubscription } from "use-stripe-subscription";
 
 type UserBookData = {
   userId: string;
@@ -34,8 +35,10 @@ export const getStaticProps: GetStaticProps = (async (context) => {
 }>;
 
 export default function BookInfoPage({
-  bookInfo,
+  bookInfo
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { subscription } = useSubscription();
+
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressRef = useRef<HTMLInputElement | null>(null);
@@ -142,6 +145,7 @@ export default function BookInfoPage({
   };
 
   if (!user) return null;
+  if (!subscription) return null;
   return (
     <>
 
