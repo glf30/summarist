@@ -18,7 +18,6 @@ const handler = (async (req : any, res : any) => {
     await subscriptionHandler({ customerId, query: req.query, body: req.body })
   );
 
-  console.log(res);
 });
 
 export default handler;

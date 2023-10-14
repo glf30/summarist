@@ -1,6 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";

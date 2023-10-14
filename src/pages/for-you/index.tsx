@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import playButton from "public/assets/play-button.svg";
 import BookCard from "~/components/BookComponents/BookCard";
-import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
 import BookCardSkeleton from "~/components/BookComponents/BookCardSkeleton";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";

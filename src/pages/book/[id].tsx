@@ -91,7 +91,6 @@ export default function BookInfoPage({
   };
 
   useEffect(() => {
-    console.log(tempBook);
     if (saved) {
       if (!!checkBook.data && !!tempBook.userId) {
         updateBook.mutate(tempBook);
@@ -101,7 +100,6 @@ export default function BookInfoPage({
 
       setSaved(false);
     }
-    console.log(checkBook.data);
   }, [tempBook]);
 
   useEffect(() => {

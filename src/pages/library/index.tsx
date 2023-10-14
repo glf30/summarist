@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import BookCard from "~/components/BookComponents/BookCard";
-import Layout from "~/components/LayoutComponents/Layout";
 import { Book } from "~/types/Book";
 import loginImage from "public/assets/login.png";
 import { SignInButton, useUser } from "@clerk/nextjs";
@@ -46,11 +45,9 @@ const LibraryLoggedIn = () => {
 
   useEffect(() => {
     const getFavoriteBooks = async () => {
-      console.log("hey!");
       const fetchPromises = data
         ?.filter((book) => book.favorite === true)
         .map(async (bookInfo) => {
-          console.log(bookInfo);
           const res = await fetch(
             `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${bookInfo.bookId}`,
           );

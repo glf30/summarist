@@ -46,7 +46,6 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
 
   const handleSideBar = () => {
     setIsOpen(!isOpen);
-    console.log("hey!");
   };
 
   useEffect(() => {
@@ -230,8 +229,6 @@ const SearchArea = ({ handleSideBar }: SearchBarProps) => {
           `https://us-central1-summaristt.cloudfunctions.net/getBooksByAuthorOrTitle?search=${searchText.toLowerCase()}`,
         );
         const data: Book[] = await res.json();
-
-        console.log(data);
         setSearchedBooks([...data]);
       };
       getSearchedBooks();

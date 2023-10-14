@@ -9,7 +9,6 @@ export const findOrCreateCustomerId = async ({
 
     
   let user = await clerkClient.users.getUser(clerkUserId);
-  console.log(user)
   if (user.publicMetadata.stripeCustomerId) {
     return user.publicMetadata.stripeCustomerId as string;
   }
