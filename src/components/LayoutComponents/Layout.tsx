@@ -1,6 +1,6 @@
 import { SignOutButton, SignInButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import logo from "public/assets/logo.png";
 import Link from "next/link";
 import homeIcon from "public/assets/home-icon.svg";
@@ -18,6 +18,9 @@ import closeIcon from "public/assets/close-icon.svg";
 import { api } from "~/utils/api";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import alphaIcon from "public/assets/alpha-icon.svg";
+
+type SizeContextType = "smallText" | "medText" | "largeText" | "xlText";
 
 interface LayoutProps {
   children: JSX.Element;
@@ -27,11 +30,15 @@ interface LayoutProps {
 interface SidebarProps {
   isPlayer?: boolean;
   isOpen: boolean;
+  textSize: SizeContextType;
+  handleChangeText: (size: SizeContextType) => void;
 }
 
 interface SearchBarProps {
   handleSideBar: () => void;
 }
+
+export const SizeContext = createContext<SizeContextType>("smallText");
 
 const Layout = ({ children, isPlayer }: LayoutProps) => {
   const [isInDB, setisInDB] = useState(false);
@@ -47,6 +54,14 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
   const handleSideBar = () => {
     setIsOpen(!isOpen);
   };
+
+
+  const [textSize, setTextSize] = useState<SizeContextType>("smallText");
+
+  const handleChangeText = (size: SizeContextType) => {
+    setTextSize(size);
+  };
+
 
   useEffect(() => {
     if (!!user) {
@@ -64,26 +79,28 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
 
   return (
     <>
-      <div className="relative flex w-full flex-col overflow-y-auto md:ml-[200px] md:w-[calc(100%-200px)]">
-        <SideBar isPlayer={isPlayer} isOpen={isOpen} />
-        <SearchArea handleSideBar={handleSideBar} />
-        {isOpen && (
-          <div
-            className="pointer-events-auto fixed left-0 top-0 z-10 h-full w-full bg-[#3a4649] opacity-70"
-            onClick={handleSideBar}
-          ></div>
-        )}
-        <div className="mx-auto my-0 w-full max-w-[1070px] px-6 py-0">
-          <div className="w-full px-0 py-10">{children}</div>
+      <SizeContext.Provider value={textSize}>
+        <div className="relative flex w-full flex-col overflow-y-auto md:ml-[200px] md:w-[calc(100%-200px)]">
+          <SideBar isPlayer={isPlayer} isOpen={isOpen} textSize={textSize} handleChangeText={handleChangeText} />
+          <SearchArea handleSideBar={handleSideBar} />
+          {isOpen && (
+            <div
+              className="pointer-events-auto fixed left-0 top-0 z-10 h-full w-full bg-[#3a4649] opacity-70"
+              onClick={handleSideBar}
+            ></div>
+          )}
+          <div className="mx-auto my-0 w-full max-w-[1070px] px-6 py-0">
+            <div className="w-full px-0 py-10">{children}</div>
+          </div>
         </div>
-      </div>
+      </SizeContext.Provider>
     </>
   );
 };
 
 export default Layout;
 
-const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
+const SideBar = ({ isPlayer, isOpen, textSize, handleChangeText }: SidebarProps) => {
   const { user } = useUser();
   const { asPath, pathname } = useRouter();
 
@@ -99,7 +116,11 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
       <div
         className={`flex-col justify-between pb-5 md:flex  ${
           isOpen ? `flex` : `hidden`
-        }  ${isPlayer ? `h-[calc(100vh-240px)] md:h-[calc(100vh-140px)]` : `h-[calc(100vh-60px)]`}  `}
+        }  ${
+          isPlayer
+            ? `h-[calc(100vh-240px)] md:h-[calc(100vh-140px)]`
+            : `h-[calc(100vh-60px)]`
+        }  `}
       >
         <div className="mt-10 flex-1">
           <Link
@@ -150,6 +171,48 @@ const SideBar = ({ isPlayer, isOpen }: SidebarProps) => {
             </div>
             <div>Search</div>
           </div>
+          {isPlayer && (
+            <div className="mx-6 my-0 flex h-14 max-w-[200px] justify-around text-primary">
+              <figure
+                id="smallText"
+                className={`flex h-8 w-8 cursor-pointer items-center justify-center ${
+                  textSize === "smallText" &&
+                  "border-b-[3px] border-b-[#2bd97c]"
+                } `}
+                onClick={() => handleChangeText("smallText")}
+              >
+                <Image src={alphaIcon} alt="home icon" height={20} width={20} />
+              </figure>
+              <figure
+                id="medText"
+                className={`flex h-8 w-8 cursor-pointer items-center justify-center ${
+                  textSize === "medText" && "border-b-[3px] border-b-[#2bd97c]"
+                } `}
+                onClick={() => handleChangeText("medText")}
+              >
+                <Image src={alphaIcon} alt="home icon" height={24} width={24} />
+              </figure>
+              <figure
+                id="largeText"
+                className={`flex h-8 w-8 cursor-pointer items-center justify-center ${
+                  textSize === "largeText" &&
+                  "border-b-[3px] border-b-[#2bd97c]"
+                } `}
+                onClick={() => handleChangeText("largeText")}
+              >
+                <Image src={alphaIcon} alt="home icon" height={28} width={28} />
+              </figure>
+              <figure
+                id="xlText"
+                className={`flex h-8 w-8 cursor-pointer items-center justify-center ${
+                  textSize === "xlText" && "border-b-[3px] border-b-[#2bd97c]"
+                } `}
+                onClick={() => handleChangeText("xlText")}
+              >
+                <Image src={alphaIcon} alt="home icon" height={32} width={32} />
+              </figure>
+            </div>
+          )}
         </div>
         <div className="">
           <Link

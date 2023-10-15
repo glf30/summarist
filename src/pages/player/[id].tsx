@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useContext } from "react";
 import { Book } from "~/types/Book";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
@@ -9,6 +9,7 @@ import playButton from "public/assets/play-button.svg";
 import pauseButton from "public/assets/pause-button.svg";
 import { api } from "~/utils/api";
 import { useSubscription } from "use-stripe-subscription";
+import { SizeContext } from "~/components/LayoutComponents/Layout";
 
 type UserBookData = {
   userId: string;
@@ -38,6 +39,9 @@ export default function BookInfoPage({
   bookInfo
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { subscription } = useSubscription();
+
+
+  const textSize = useContext(SizeContext);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -156,7 +160,12 @@ export default function BookInfoPage({
               {bookInfo.title}
             </div>
             {/* summary */}
-            <div className="whitespace-pre-line leading-[1.4rem] text-primary">
+            <div className={`whitespace-pre-line leading-[1.4] 
+            ${textSize ==='smallText' && `text-base`} 
+            ${textSize ==='medText' && `text-lg`} 
+            ${textSize ==='largeText' && `text-[22px]`} 
+            ${textSize ==='xlText' && `text-[26px]`} 
+            text-primary`}>
               {bookInfo.summary}
             </div>
           </div>

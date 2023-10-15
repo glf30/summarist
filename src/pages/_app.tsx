@@ -9,12 +9,13 @@ import { SubscriptionProvider } from "use-stripe-subscription";
 import { ClerkProvider } from "@clerk/nextjs";
 import DefaultLayout from "~/components/LayoutComponents/Layout";
 import { useRouter } from "next/router";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingSpinner } from "~/components/LayoutComponents/Loading";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
   const Layout = DefaultLayout;
   const isPlayer = router.pathname.slice(0, 7) === "/player";
   let timeout: NodeJS.Timeout;
