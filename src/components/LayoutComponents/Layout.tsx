@@ -80,7 +80,7 @@ const Layout = ({ children, isPlayer }: LayoutProps) => {
   return (
     <>
       <SizeContext.Provider value={textSize}>
-        <div className="relative flex w-full flex-col overflow-y-auto md:ml-[200px] md:w-[calc(100%-200px)]">
+        <div className="relative flex w-full flex-col overflow-y-auto md:ml-[200px] md:w-[calc(100%-200px)] min-h-screen">
           <SideBar isPlayer={isPlayer} isOpen={isOpen} textSize={textSize} handleChangeText={handleChangeText} />
           <SearchArea handleSideBar={handleSideBar} />
           {isOpen && (
