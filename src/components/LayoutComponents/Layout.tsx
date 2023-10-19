@@ -102,7 +102,7 @@ export default Layout;
 
 const SideBar = ({ isPlayer, isOpen, textSize, handleChangeText }: SidebarProps) => {
   const { user } = useUser();
-  const { asPath, pathname } = useRouter();
+  const { asPath, pathname, reload } = useRouter();
 
   return (
     <div
@@ -247,7 +247,7 @@ const SideBar = ({ isPlayer, isOpen, textSize, handleChangeText }: SidebarProps)
             <div>Help & Support</div>
           </div>
           {!!user ? (
-            <SignOutButton>
+            <SignOutButton signOutCallback={() => reload()}>
               <button className="mb-2 flex h-14 w-full items-center text-primary duration-200 hover:bg-[#f0efef]">
                 <div className="mr-4 h-full w-1 bg-transparent"></div>
                 <div className="mr-2 flex items-center justify-center">
