@@ -160,7 +160,7 @@ export default function BookInfoPage({
               {bookInfo.title}
             </div>
             {/* summary */}
-            <div className={`whitespace-pre-line leading-[1.4] pb-20
+            <div className={`whitespace-pre-line leading-[1.4] pb-[200px] md:pb-20
             ${textSize ==='smallText' && `text-base`} 
             ${textSize ==='medText' && `text-lg`} 
             ${textSize ==='largeText' && `text-[22px]`} 
