@@ -153,14 +153,14 @@ export default function BookInfoPage({
   return (
     <>
 
-        <div className="relative h-[calc(100vh-240px)] w-full">
+        <div className="relative w-full">
           <div className="mx-auto my-0 max-w-[800px] whitespace-pre-line p-6 pt-0 text-base">
             {/* title */}
             <div className="mb-8 border-b border-[#e1e7ea] pb-4 text-2xl font-semibold text-primary">
               {bookInfo.title}
             </div>
             {/* summary */}
-            <div className={`whitespace-pre-line leading-[1.4] 
+            <div className={`whitespace-pre-line leading-[1.4] pb-20
             ${textSize ==='smallText' && `text-base`} 
             ${textSize ==='medText' && `text-lg`} 
             ${textSize ==='largeText' && `text-[22px]`} 
