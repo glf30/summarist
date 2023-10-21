@@ -149,7 +149,7 @@ export default function BookInfoPage({
   };
 
   if (!user) return null;
-  if (!subscription) return null;
+  if (!subscription && bookInfo.subscriptionRequired) return null;
   return (
     <>
 
